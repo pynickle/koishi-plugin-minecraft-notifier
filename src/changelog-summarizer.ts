@@ -7,6 +7,15 @@ import { Config } from './index';
 import { createBotTextMsgNode } from './onebot-helper';
 import { systemPrompt } from './prompt-const';
 import { getRandomUserAgent } from './web_helper';
+import { exportXaml } from './xaml-generator';
+
+export const minecraftSummaryTypeMap: Record<string, string> = {
+    new_features: '✨ 新特性',
+    improvements: '🔧 改进与优化',
+    balancing: '⚖️ 平衡调整',
+    bug_fixes: '🐛 错误修复',
+    technical_changes: '⚙️ 技术变更',
+};
 
 export async function checkNewVersionArticle(ctx: Context, cfg: Config) {
     const [articleRecord, notifierRecord] = await Promise.all([
@@ -122,14 +131,6 @@ export async function processNewVersionArticle(
     );
     return await summarizeMinecraftUpdate(ctx, cfg, version, content);
 }
-
-const minecraftSummaryTypeMap: Record<string, string> = {
-    new_features: '✨ 新特性',
-    improvements: '🔧 改进与优化',
-    balancing: '⚖️ 平衡调整',
-    bug_fixes: '🐛 错误修复',
-    technical_changes: '⚙️ 技术变更',
-};
 
 async function summarizeMinecraftUpdate(
     ctx: Context,
@@ -311,6 +312,8 @@ ${updateContent}
     for (const groupId of cfg.notifyChannel) {
         await ctx.bots[0].internal.sendGroupForwardMsg(groupId, messages);
     }
+
+    await exportXaml(ctx, summary, version);
 
     return true;
 }
