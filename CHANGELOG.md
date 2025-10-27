@@ -1,3 +1,9 @@
+## [1.2.3](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.2.2...v1.2.3) (2025-10-27)
+
+### 🐛 Bug Fixes
+
+* fix wrong gitee api operation ([55bc582](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/55bc582430e43dd45a74cb177bf737de31ff7218))
+
 ## [1.2.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.2.1...v1.2.2) (2025-10-27)
 
 ### 🐛 Bug Fixes
