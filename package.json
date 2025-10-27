@@ -1,22 +1,52 @@
 {
   "name": "koishi-plugin-minecraft-notifier",
-  "description": "A Minecraft new version notification plugin, featuring a PCL homepage and beautiful images.",
+  "description": "A Minecraft new version notification plugin, also featuring a PCL homepage.",
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "type": "module",
   "files": [
     "lib",
     "dist"
   ],
   "license": "MIT",
-  "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
     "plugin"
   ],
-  "devDependencies": {},
+  "scripts": {
+    "lint": "eslint ./src --ext .ts",
+    "lint:fix": "eslint ./src --ext .ts --fix",
+    "build": "node esbuild.config.js && tsc --emitDeclarationOnly",
+    "release": "semantic-release"
+  },
   "peerDependencies": {
+    "@pynickle/koishi-plugin-adapter-onebot": "^1.0.0",
     "koishi": "^4.18.9"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^13.1.1",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/turndown": "^5.0.6",
+    "conventional-changelog-conventionalcommits": "^9.1.0",
+    "esbuild": "^0.25.11",
+    "esbuild-plugin-yaml": "^0.0.1",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.6.2",
+    "semantic-release": "^25.0.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2"
+  },
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cheerio": "^1.1.2",
+    "turndown": "^7.2.2"
   }
 }
