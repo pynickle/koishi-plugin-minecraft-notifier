@@ -73,10 +73,10 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
                 const margin =
                     k === sub.items.length - 1 && j === subcategories.length - 1
                         ? ''
-                        : '0,0,0,2';
+                        : 'Margin="0,0,0,2"';
                 contentXaml += `
                     <TextBlock
-                        Margin="${margin}"
+                        ${margin}
                         Foreground="{DynamicResource ColorBrush1}"
                         Text="  - ${msg}" />`;
             }
