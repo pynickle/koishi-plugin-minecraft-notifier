@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.2.0...v1.2.1) (2025-10-27)
+
+### 🐛 Bug Fixes
+
+* remove hidden for config ([9ecb946](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/9ecb94632d347b2032289ddb99e4de6ff67ad3ce))
+
 ## [1.2.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.1.1...v1.2.0) (2025-10-27)
 
 ### ✨ Features
