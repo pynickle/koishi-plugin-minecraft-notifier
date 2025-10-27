@@ -81,6 +81,7 @@ async function checkVersionUpdate(
         await updateArticleRecord(ctx, {
             [versionKey]: newVersion,
             [tryTimeKey]: 0,
+            latestVersion: newVersion,
         });
         return true;
     }
@@ -93,6 +94,7 @@ async function checkVersionUpdate(
         await updateArticleRecord(ctx, {
             [versionKey]: newVersion,
             [tryTimeKey]: 0,
+            latestVersion: newVersion,
         });
     } else {
         // 未达到最大次数，仅更新尝试次数

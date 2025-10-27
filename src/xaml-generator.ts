@@ -199,10 +199,7 @@ export async function exportXaml(
             'master'
         ).then((result) => {
             if (result.success) {
-                ctx.logger('minecraft-notifier').info(
-                    'Upsert successful:',
-                    result.data?.data
-                );
+                ctx.logger('minecraft-notifier').info('Upsert successful');
             } else {
                 ctx.logger('minecraft-notifier').warn(
                     'Upsert failed:',

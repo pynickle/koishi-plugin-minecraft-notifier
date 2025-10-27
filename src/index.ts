@@ -4,7 +4,6 @@ import { Context, Schema } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { checkNewVersionArticle } from './changelog-summarizer';
-import { upsertFileToGitee } from './gitee-helper';
 
 export const name = 'minecraft-notifier';
 
@@ -22,6 +21,7 @@ export interface ArticleLatestVersion {
     lastSnapshot: string;
     releaseTryTime: number;
     snapshotTryTime: number;
+    latestVersion: string;
 }
 
 export interface ArticleRecord {
@@ -96,6 +96,7 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
             lastSnapshot: 'string',
             releaseTryTime: 'integer',
             snapshotTryTime: 'integer',
+            latestVersion: 'string',
         },
         { primary: 'id' }
     );
@@ -167,7 +168,6 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
     }
 
     ctx.server.get('/Custom.xaml', async (koaCtx: any) => {
-        // 设置响应头：Content-Type 为 XAML/XML，Content-Disposition 为内联下载（可选）
         koaCtx.set('Content-Type', 'application/xml; charset=utf-8');
         koaCtx.set(
             'Content-Disposition',
@@ -178,18 +178,21 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
         koaCtx.response.body = await promises.readFile(fullHomePagePath);
     });
 
-    ctx.command('test').action(async ({ session }) => {
-        await upsertFileToGitee(
-            ctx,
-            'pynickle',
-            'PCL-AI-Summary-HomePage',
-            'Custom.xaml',
-            '111',
-            `feat: update PCL HomePage XAML for version 111`,
-            'c8629ca06822133e7d8b497c6e71cc7a',
-            'master'
-        );
+    ctx.server.get('/Custom.xaml.ini', async (koaCtx: any) => {
+        koaCtx.set('charset=utf-8');
+
+        const articleRecord = (
+            await ctx.database.get('minecraft_article_version', 1)
+        )[0];
+
+        koaCtx.response.body = articleRecord.latestVersion;
     });
+
+    ctx.command('mc.trigger', '手动触发 AI 更新日志总结生成').action(
+        async () => {
+            await checkNewVersionArticle(ctx, cfg);
+        }
+    );
 
     ctx.setInterval(async () => {
         try {
