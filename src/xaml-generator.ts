@@ -3,7 +3,7 @@ import { Context } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { minecraftSummaryTypeMap } from './changelog-summarizer';
-import { updateFileOnGitee } from './gitee-helper';
+import { upsertFileToGitee } from './gitee-helper';
 import { Config } from './index';
 
 interface Subcategory {
@@ -188,7 +188,7 @@ export async function exportXaml(
     await promises.writeFile(fullXamlPath, xaml);
     await promises.copyFile(fullXamlPath, fullHomePagePath);
     if (cfg.giteeApiToken && cfg.giteeOwner && cfg.giteeRepo) {
-        await updateFileOnGitee(
+        await upsertFileToGitee(
             cfg.giteeOwner,
             cfg.giteeRepo,
             'Custom.xaml',

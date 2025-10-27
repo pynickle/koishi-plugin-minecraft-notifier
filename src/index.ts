@@ -59,6 +59,7 @@ export const Config: Schema<Config> = Schema.object({
         .description('AI 接口的基础 URL'),
     model: Schema.string().default('gpt-5').description('使用的 AI 模型'),
     apiKey: Schema.string()
+        .role('secret')
         .default('')
         .description('AI 接口的 API 密钥')
         .required(),
@@ -66,6 +67,7 @@ export const Config: Schema<Config> = Schema.object({
         .default([])
         .description('用于接收更新通知的频道 ID 列表'),
     giteeApiToken: Schema.string()
+        .role('secret')
         .default('')
         .description('Gitee API 访问令牌，用于上传 XAML 文件'),
     giteeOwner: Schema.string()
