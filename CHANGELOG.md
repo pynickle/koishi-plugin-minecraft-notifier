@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.0.2...v1.1.0) (2025-10-27)
+
+### ✨ Features
+
+* add xaml generator and PCL homepage url ([bcda33c](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/bcda33ca73e373970a18c96d31bf3e46194ea43d))
+
 ## [1.0.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.0.1...v1.0.2) (2025-10-27)
 
 ### 🐛 Bug Fixes
