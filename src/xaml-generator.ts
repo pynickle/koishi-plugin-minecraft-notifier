@@ -209,6 +209,16 @@ export async function exportXaml(
                 );
             }
         });
+
+        await upsertFileToGitee(
+            cfg.giteeOwner,
+            cfg.giteeRepo,
+            'Custom.xaml.ini',
+            version,
+            `feat: update PCL HomePage XAML INI for version ${version}`,
+            cfg.giteeApiToken,
+            'master'
+        );
     }
     return fullXamlPath;
 }
