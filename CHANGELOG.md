@@ -1,3 +1,14 @@
+## [1.2.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.1.1...v1.2.0) (2025-10-27)
+
+### ✨ Features
+
+* add gitee upload ([91117b5](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/91117b5729566b0922400cf1472d605d259bd4d6))
+* add more config and log ([4701342](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/47013426e81bbc27668bd22c1754afd8cb099798))
+
+### 🐛 Bug Fixes
+
+* fix margin problem when no margin needed ([2e0dea7](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/2e0dea74699656ea31bcbc301bbc52c6bb54c8f1))
+
 ## [1.1.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.1.0...v1.1.1) (2025-10-27)
 
 ### 🐛 Bug Fixes
