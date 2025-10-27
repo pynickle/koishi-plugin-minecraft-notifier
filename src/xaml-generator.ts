@@ -189,6 +189,7 @@ export async function exportXaml(
     await promises.copyFile(fullXamlPath, fullHomePagePath);
     if (cfg.giteeApiToken && cfg.giteeOwner && cfg.giteeRepo) {
         await upsertFileToGitee(
+            ctx,
             cfg.giteeOwner,
             cfg.giteeRepo,
             'Custom.xaml',
@@ -211,6 +212,7 @@ export async function exportXaml(
         });
 
         await upsertFileToGitee(
+            ctx,
             cfg.giteeOwner,
             cfg.giteeRepo,
             'Custom.xaml.ini',

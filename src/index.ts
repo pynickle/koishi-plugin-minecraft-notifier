@@ -4,6 +4,7 @@ import { Context, Schema } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { checkNewVersionArticle } from './changelog-summarizer';
+import { upsertFileToGitee } from './gitee-helper';
 
 export const name = 'minecraft-notifier';
 
@@ -175,6 +176,19 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
 
         let fullHomePagePath = path.join(xamlPath, 'PCL.HomePage.xaml');
         koaCtx.response.body = await promises.readFile(fullHomePagePath);
+    });
+
+    ctx.command('test').action(async ({ session }) => {
+        await upsertFileToGitee(
+            ctx,
+            'pynickle',
+            'PCL-AI-Summary-HomePage',
+            'Custom.xaml',
+            '111',
+            `feat: update PCL HomePage XAML for version 111`,
+            'c8629ca06822133e7d8b497c6e71cc7a',
+            'master'
+        );
     });
 
     ctx.setInterval(async () => {

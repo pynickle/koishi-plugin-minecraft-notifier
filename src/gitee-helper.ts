@@ -1,7 +1,9 @@
 ﻿import axios, { AxiosResponse } from 'axios';
+import { Context } from 'koishi';
 
 /**
  * 上传或更新 Gitee 仓库中的文本文件（如果不存在则创建，如果存在则更新）
+ * @param ctx
  * @param owner - 仓库所有者用户名
  * @param repo - 仓库名称
  * @param path - 文件路径（例如 'docs/update.txt'）
@@ -12,6 +14,7 @@
  * @returns Promise<{ success: boolean; data?: AxiosResponse; error?: string }>
  */
 export async function upsertFileToGitee(
+    ctx: Context,
     owner: string,
     repo: string,
     path: string,
@@ -31,8 +34,21 @@ export async function upsertFileToGitee(
         const checkResponse: AxiosResponse = await axios.get(checkUrl);
 
         if (checkResponse.status === 200) {
-            fileSha = checkResponse.data.sha; // 提取 SHA
+            // 检查响应体：如果为空数组 [] 或缺少 sha，则视为不存在
+            if (
+                Array.isArray(checkResponse.data) &&
+                checkResponse.data.length === 0
+            ) {
+                // 空数组，视为不存在
+            } else if (checkResponse.data.sha) {
+                fileSha = checkResponse.data.sha; // 提取 SHA
+            } else {
+                // 其他无效响应，视为不存在
+            }
         } else {
+            ctx.logger('minecraft-notifier').warn(
+                `Unexpected status code when checking file: ${checkResponse.status}`
+            );
             throw new Error(`Unexpected status: ${checkResponse.status}`);
         }
     } catch (checkError: any) {
@@ -56,7 +72,7 @@ export async function upsertFileToGitee(
                 );
                 return { success: true, data: createResponse };
             } catch (createError: any) {
-                console.error(
+                ctx.logger('minecraft-notifier').warn(
                     'Gitee Create Error:',
                     createError.response?.data || createError.message
                 );
@@ -69,7 +85,7 @@ export async function upsertFileToGitee(
             }
         } else {
             // 其他检查错误
-            console.error(
+            ctx.logger('minecraft-notifier').warn(
                 'Gitee Check Error:',
                 checkError.response?.data || checkError.message
             );
@@ -101,7 +117,7 @@ export async function upsertFileToGitee(
             );
             return { success: true, data: updateResponse };
         } catch (updateError: any) {
-            console.error(
+            ctx.logger('minecraft-notifier').warn(
                 'Gitee Update Error:',
                 updateError.response?.data || updateError.message
             );
@@ -113,6 +129,32 @@ export async function upsertFileToGitee(
         }
     }
 
-    // 备用错误（不应到达）
-    return { success: false, error: 'Failed to determine file existence' };
+    // 文件不存在或无效响应，使用 POST 创建
+    const createUrl = `https://gitee.com/api/v5/repos/${owner}/${repo}/contents/${path}`;
+    try {
+        const createResponse: AxiosResponse = await axios.post(
+            createUrl,
+            {
+                access_token: token,
+                content: base64Content,
+                message,
+                branch,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        return { success: true, data: createResponse };
+    } catch (createError: any) {
+        ctx.logger('minecraft-notifier').warn(
+            'Gitee Create Error:',
+            createError.response?.data || createError.message
+        );
+        return {
+            success: false,
+            error: createError.response?.data?.message || createError.message,
+        };
+    }
 }
