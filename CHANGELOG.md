@@ -1,3 +1,9 @@
+## [1.2.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.2.1...v1.2.2) (2025-10-27)
+
+### 🐛 Bug Fixes
+
+* another hidden ([aae24aa](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/aae24aab7656ba0598cd1f0694d1bd79d0b55f8c))
+
 ## [1.2.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.2.0...v1.2.1) (2025-10-27)
 
 ### 🐛 Bug Fixes
