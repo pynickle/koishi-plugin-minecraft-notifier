@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.3.1...v1.4.0) (2025-10-27)
+
+### ✨ Features
+
+* add manual trigger for new ai summary and field to save latest version ([31ff95f](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/31ff95f34e0bd9eba9368ebc3c6e77cbb0693980))
+
 ## [1.3.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.3.0...v1.3.1) (2025-10-27)
 
 ### 🐛 Bug Fixes
