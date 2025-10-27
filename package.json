@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-minecraft-notifier",
   "description": "A Minecraft new version notification plugin, also featuring a PCL homepage.",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "module",
