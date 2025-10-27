@@ -1,3 +1,13 @@
+## [1.3.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.2.4...v1.3.0) (2025-10-27)
+
+### ✨ Features
+
+* add Custom.xaml.ini file upload for gitee ([2829b77](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/2829b777f35603e39c51afc519b8bb1370f84430))
+
+### 🚀 Improvements
+
+* Change server url to Custom.xaml ([9dc7fed](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/9dc7fed088be7fa1a5df9e9af6df97e2dadb976e))
+
 ## [1.2.4](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.2.3...v1.2.4) (2025-10-27)
 
 ### 🐛 Bug Fixes
