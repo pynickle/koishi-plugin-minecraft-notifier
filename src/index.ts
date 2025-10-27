@@ -68,7 +68,6 @@ export const Config: Schema<Config> = Schema.object({
         .description('用于接收更新通知的频道 ID 列表'),
     giteeApiToken: Schema.string()
         .default('')
-        .hidden()
         .description('Gitee API 访问令牌，用于上传 XAML 文件'),
     giteeOwner: Schema.string()
         .default('')
