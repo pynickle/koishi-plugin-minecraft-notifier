@@ -3,6 +3,7 @@ import { Context, Schema } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { checkNewVersionArticle } from './changelog-summarizer';
+import fs from "fs";
 
 export const name = 'minecraft-notifier';
 
@@ -141,6 +142,12 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
         }
     };
 
+    const xamlPath = path.join(ctx.baseDir, 'data', 'minecraft-notifier', 'xaml');
+
+    if (!fs.existsSync(xamlPath)) {
+        fs.mkdirSync(xamlPath, { recursive: true });
+    }
+
     ctx.server.get('/PCL', async (koaCtx: any) => {
         // 设置响应头：Content-Type 为 XAML/XML，Content-Disposition 为内联下载（可选）
         koaCtx.set('Content-Type', 'application/xml; charset=utf-8');
@@ -149,12 +156,6 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
             'inline; filename="PCL.HomePage.xaml"'
         );
 
-        const xamlPath = path.join(
-            ctx.baseDir,
-            'data',
-            'minecraft-notifier',
-            'xaml'
-        );
         let fullHomePagePath = path.join(xamlPath, 'PCL.HomePage.xaml');
         koaCtx.response.body = await promises.readFile(fullHomePagePath);
     });
