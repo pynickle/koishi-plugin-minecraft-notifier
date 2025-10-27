@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.1.0...v1.1.1) (2025-10-27)
+
+### 🐛 Bug Fixes
+
+* fix xaml path not found ([fef24fc](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/fef24fcf0eebab2786c147a2fe159166cafa8dad))
+
 ## [1.1.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.0.2...v1.1.0) (2025-10-27)
 
 ### ✨ Features
