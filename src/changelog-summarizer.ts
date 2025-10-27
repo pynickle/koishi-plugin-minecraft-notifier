@@ -266,6 +266,10 @@ ${updateContent}
     const content = response.data.choices[0].message.content;
     const summary = JSON.parse(content);
 
+    ctx.logger('minecraft-notifier').info(
+        `Summarization completed for version ${version}. Preparing to send notifications...`
+    );
+
     const messages = [
         createBotTextMsgNode(ctx.bots[0], `=== ${version} 更新总结 ===`),
     ];
@@ -313,7 +317,15 @@ ${updateContent}
         await ctx.bots[0].internal.sendGroupForwardMsg(groupId, messages);
     }
 
+    ctx.logger('minecraft-notifier').info(
+        `Notifications sent for version ${version}. Generating XAML...`
+    );
+
     await exportXaml(ctx, cfg, summary, version);
+
+    ctx.logger('minecraft-notifier').info(
+        `XAML generation completed for version ${version}.`
+    );
 
     return true;
 }

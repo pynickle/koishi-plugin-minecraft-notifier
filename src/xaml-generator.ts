@@ -3,7 +3,7 @@ import { Context } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { minecraftSummaryTypeMap } from './changelog-summarizer';
-import { uploadFileToGitee } from './gitee-helper';
+import { updateFileOnGitee } from './gitee-helper';
 import { Config } from './index';
 
 interface Subcategory {
@@ -187,13 +187,13 @@ export async function exportXaml(
 
     await promises.writeFile(fullXamlPath, xaml);
     await promises.copyFile(fullXamlPath, fullHomePagePath);
-    if (cfg.giteeApiToken) {
-        await uploadFileToGitee(
-            'pynickle',
-            'PCL-AI-Summary-HomePage',
+    if (cfg.giteeApiToken && cfg.giteeOwner && cfg.giteeRepo) {
+        await updateFileOnGitee(
+            cfg.giteeOwner,
+            cfg.giteeRepo,
             'Custom.xaml',
             xaml,
-            `feat: update Minecraft notifier XAML for version ${version}`,
+            `feat: update PCL HomePage XAML for version ${version}`,
             cfg.giteeApiToken,
             'master'
         );

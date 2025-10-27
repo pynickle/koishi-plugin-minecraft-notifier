@@ -1,13 +1,26 @@
 ﻿import axios, { AxiosResponse } from 'axios';
 
-export async function uploadFileToGitee(
-    owner: string, // 仓库所有者用户名
-    repo: string, // 仓库名称
-    path: string, // 文件路径（例如 'docs/update.txt'）
-    content: string, // 文件内容（纯文本字符串）
-    message: string, // Commit 消息
-    token: string, // Gitee Personal Access Token
-    branch: string = 'master' // 分支名称，默认为 'master'
+/**
+ * 更新 Gitee 仓库中的文本文件
+ * @param owner - 仓库所有者用户名
+ * @param repo - 仓库名称
+ * @param path - 文件路径（例如 'docs/update.txt'）
+ * @param content - 文件内容（纯文本字符串，会自动 Base64 编码）
+ * @param sha - 文件的当前 SHA 值（通过 GET contents API 获取，用于更新）
+ * @param message - Commit 消息
+ * @param token - Gitee Personal Access Token
+ * @param branch - 分支名（默认 'master'）
+ * @returns Promise<{ success: boolean; data?: AxiosResponse; error?: string }>
+ */
+export async function updateFileOnGitee(
+    owner: string,
+    repo: string,
+    path: string,
+    content: string,
+    sha: string,
+    message: string,
+    token: string,
+    branch: string = 'master'
 ): Promise<{ success: boolean; data?: AxiosResponse; error?: string }> {
     // 将内容编码为 Base64
     const base64Content = Buffer.from(content, 'utf-8').toString('base64');
@@ -15,10 +28,11 @@ export async function uploadFileToGitee(
     const url = `https://gitee.com/api/v5/repos/${owner}/${repo}/contents/${path}`;
 
     try {
-        const response: AxiosResponse = await axios.post(
+        const response: AxiosResponse = await axios.put(
             url,
             {
                 content: base64Content,
+                sha,
                 message,
                 branch,
             },
@@ -33,7 +47,7 @@ export async function uploadFileToGitee(
         return { success: true, data: response };
     } catch (error: any) {
         console.error(
-            'Gitee Upload Error:',
+            'Gitee Update Error:',
             error.response?.data || error.message
         );
         return {
