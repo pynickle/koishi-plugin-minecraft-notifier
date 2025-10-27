@@ -313,7 +313,7 @@ ${updateContent}
         await ctx.bots[0].internal.sendGroupForwardMsg(groupId, messages);
     }
 
-    await exportXaml(ctx, summary, version);
+    await exportXaml(ctx, cfg, summary, version);
 
     return true;
 }

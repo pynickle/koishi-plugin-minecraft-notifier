@@ -3,6 +3,8 @@ import { Context } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { minecraftSummaryTypeMap } from './changelog-summarizer';
+import { uploadFileToGitee } from './gitee-helper';
+import { Config } from './index';
 
 interface Subcategory {
     subcategory: string;
@@ -168,6 +170,7 @@ ${categoriesXaml}
 
 export async function exportXaml(
     ctx: Context,
+    cfg: Config,
     summary: MinecraftSummary,
     version: string
 ): Promise<string> {
@@ -184,5 +187,16 @@ export async function exportXaml(
 
     await promises.writeFile(fullXamlPath, xaml);
     await promises.copyFile(fullXamlPath, fullHomePagePath);
+    if (cfg.giteeApiToken) {
+        await uploadFileToGitee(
+            'pynickle',
+            'PCL-AI-Summary-HomePage',
+            'Custom.xaml',
+            xaml,
+            `feat: update Minecraft notifier XAML for version ${version}`,
+            cfg.giteeApiToken,
+            'master'
+        );
+    }
     return fullXamlPath;
 }

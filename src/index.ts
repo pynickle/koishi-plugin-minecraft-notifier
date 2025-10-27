@@ -1,9 +1,9 @@
 import axios from 'axios';
+import fs from 'fs';
 import { Context, Schema } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { checkNewVersionArticle } from './changelog-summarizer';
-import fs from "fs";
 
 export const name = 'minecraft-notifier';
 
@@ -45,6 +45,7 @@ export interface Config {
     model: string;
     apiKey: string;
     notifyChannel: string[];
+    giteeApiToken?: string;
 }
 
 export const Config: Schema<Config> = Schema.object({
@@ -62,6 +63,9 @@ export const Config: Schema<Config> = Schema.object({
     notifyChannel: Schema.array(String)
         .default([])
         .description('用于接收更新通知的频道 ID 列表'),
+    giteeApiToken: Schema.string()
+        .default('')
+        .description('Gitee API 访问令牌，用于上传 XAML 文件'),
 });
 
 export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
@@ -142,7 +146,12 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
         }
     };
 
-    const xamlPath = path.join(ctx.baseDir, 'data', 'minecraft-notifier', 'xaml');
+    const xamlPath = path.join(
+        ctx.baseDir,
+        'data',
+        'minecraft-notifier',
+        'xaml'
+    );
 
     if (!fs.existsSync(xamlPath)) {
         fs.mkdirSync(xamlPath, { recursive: true });
