@@ -61,7 +61,6 @@ export const Config: Schema<Config> = Schema.object({
     apiKey: Schema.string()
         .default('')
         .description('AI 接口的 API 密钥')
-        .hidden()
         .required(),
     notifyChannel: Schema.array(String)
         .default([])
