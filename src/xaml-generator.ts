@@ -196,7 +196,19 @@ export async function exportXaml(
             `feat: update PCL HomePage XAML for version ${version}`,
             cfg.giteeApiToken,
             'master'
-        );
+        ).then((result) => {
+            if (result.success) {
+                ctx.logger('minecraft-notifier').info(
+                    'Upsert successful:',
+                    result.data?.data
+                );
+            } else {
+                ctx.logger('minecraft-notifier').warn(
+                    'Upsert failed:',
+                    result.error
+                );
+            }
+        });
     }
     return fullXamlPath;
 }

@@ -24,15 +24,11 @@ export async function upsertFileToGitee(
     const base64Content = Buffer.from(content, 'utf-8').toString('base64');
 
     // 步骤 1: GET 检查文件是否存在
-    const checkUrl = `https://gitee.com/api/v5/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+    const checkUrl = `https://gitee.com/api/v5/repos/${owner}/${repo}/contents/${path}?ref=${branch}&access_token=${token}`;
     let fileSha: string | null = null;
 
     try {
-        const checkResponse: AxiosResponse = await axios.get(checkUrl, {
-            headers: {
-                Authorization: `token ${token}`,
-            },
-        });
+        const checkResponse: AxiosResponse = await axios.get(checkUrl);
 
         if (checkResponse.status === 200) {
             fileSha = checkResponse.data.sha; // 提取 SHA
@@ -47,13 +43,13 @@ export async function upsertFileToGitee(
                 const createResponse: AxiosResponse = await axios.post(
                     createUrl,
                     {
+                        access_token: token,
                         content: base64Content,
                         message,
                         branch,
                     },
                     {
                         headers: {
-                            Authorization: `token ${token}`,
                             'Content-Type': 'application/json',
                         },
                     }
@@ -91,6 +87,7 @@ export async function upsertFileToGitee(
             const updateResponse: AxiosResponse = await axios.put(
                 updateUrl,
                 {
+                    access_token: token,
                     content: base64Content,
                     sha: fileSha,
                     message,
@@ -98,7 +95,6 @@ export async function upsertFileToGitee(
                 },
                 {
                     headers: {
-                        Authorization: `token ${token}`,
                         'Content-Type': 'application/json',
                     },
                 }
