@@ -165,7 +165,7 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
         fs.mkdirSync(xamlPath, { recursive: true });
     }
 
-    ctx.server.get('/PCL', async (koaCtx: any) => {
+    ctx.server.get('/Custom.xaml', async (koaCtx: any) => {
         // 设置响应头：Content-Type 为 XAML/XML，Content-Disposition 为内联下载（可选）
         koaCtx.set('Content-Type', 'application/xml; charset=utf-8');
         koaCtx.set(
