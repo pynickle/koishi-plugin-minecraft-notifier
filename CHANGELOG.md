@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.5.1...v1.6.0) (2025-10-28)
+
+### ✨ Features
+
+* add upload to gitcode ([beb5e2c](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/beb5e2cacaec15370a2affbb8f027db3f6bb808b))
+
 ## [1.5.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.5.0...v1.5.1) (2025-10-28)
 
 ### 🐛 Bug Fixes
