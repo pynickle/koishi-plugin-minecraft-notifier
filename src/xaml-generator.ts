@@ -4,7 +4,7 @@ import { Context } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { minecraftSummaryTypeMap } from './changelog-summarizer';
-import { upsertFileToGitee } from './gitee-helper';
+import { upsertFileToGitCode, upsertFileToGitee } from './git-platform-helper';
 import { Config } from './index';
 
 interface Subcategory {
@@ -97,7 +97,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
                 Title="${categoryTitle}"
                 Margin="0,5,0,10"
                 CanSwap="True"
-                IsSwapped="${["new_features", "improvements", "balancing"].includes(category) ? 'False' : 'True'}"
+                IsSwapped="${['new_features', 'improvements', 'balancing'].includes(category) ? 'False' : 'True'}"
                 Style="{StaticResource Card}">
                 <StackPanel Orientation="Vertical" Style="{StaticResource ContentStack}">
 ${contentXaml}
@@ -200,10 +200,12 @@ export async function exportXaml(
             'master'
         ).then((result) => {
             if (result.success) {
-                ctx.logger('minecraft-notifier').info('Upsert successful');
+                ctx.logger('minecraft-notifier').info(
+                    'Upsert successful of gitee.'
+                );
             } else {
                 ctx.logger('minecraft-notifier').warn(
-                    'Upsert failed:',
+                    'Upsert failed of gitee:',
                     result.error
                 );
             }
@@ -220,5 +222,41 @@ export async function exportXaml(
             'master'
         );
     }
+
+    if (cfg.gitcodeApiToken && cfg.gitcodeOwner && cfg.gitcodeRepo) {
+        await upsertFileToGitCode(
+            ctx,
+            cfg.gitcodeOwner,
+            cfg.gitcodeRepo,
+            'Custom.xaml',
+            xaml,
+            `feat: update PCL HomePage XAML for version ${version}`,
+            cfg.gitcodeApiToken,
+            'master'
+        ).then((result) => {
+            if (result.success) {
+                ctx.logger('minecraft-notifier').info(
+                    'Upsert successful of gitcode.'
+                );
+            } else {
+                ctx.logger('minecraft-notifier').warn(
+                    'Upsert failed of gitcode:',
+                    result.error
+                );
+            }
+        });
+
+        await upsertFileToGitCode(
+            ctx,
+            cfg.gitcodeOwner,
+            cfg.gitcodeRepo,
+            'Custom.xaml.ini',
+            version,
+            `feat: update PCL HomePage XAML INI for version ${version}`,
+            cfg.gitcodeApiToken,
+            'master'
+        );
+    }
+
     return fullXamlPath;
 }

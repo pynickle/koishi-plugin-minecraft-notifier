@@ -4,6 +4,7 @@ import { Context, Schema } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { checkNewVersionArticle } from './changelog-summarizer';
+import { upsertFileToGitCode } from './git-platform-helper';
 
 export const name = 'minecraft-notifier';
 
@@ -49,6 +50,9 @@ export interface Config {
     giteeApiToken?: string;
     giteeOwner?: string;
     giteeRepo?: string;
+    gitcodeApiToken?: string;
+    gitcodeOwner?: string;
+    gitcodeRepo?: string;
 }
 
 export const Config: Schema<Config> = Schema.object({
@@ -75,6 +79,14 @@ export const Config: Schema<Config> = Schema.object({
         .default('')
         .description('Gitee 仓库所有者用户名'),
     giteeRepo: Schema.string().default('').description('Gitee 仓库名称'),
+    gitcodeApiToken: Schema.string()
+        .role('secret')
+        .default('')
+        .description('GitCode API 访问令牌，用于上传 XAML 文件'),
+    gitcodeOwner: Schema.string()
+        .default('')
+        .description('GitCode 仓库所有者用户名'),
+    gitcodeRepo: Schema.string().default('').description('GitCode 仓库名称'),
 });
 
 export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
@@ -191,6 +203,21 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
     ctx.command('mc.trigger', '手动触发 AI 更新日志总结生成').action(
         async () => {
             await checkNewVersionArticle(ctx, cfg);
+        }
+    );
+
+    ctx.command('mc.trigger.gitcode', '手动触发 AI 更新日志总结生成').action(
+        async () => {
+            await upsertFileToGitCode(
+                ctx,
+                cfg.gitcodeOwner,
+                cfg.gitcodeRepo,
+                'Custom.xaml.ini',
+                '25w43a',
+                `feat: update PCL HomePage XAML INI for version 25w43a`,
+                cfg.gitcodeApiToken,
+                'master'
+            );
         }
     );
 
