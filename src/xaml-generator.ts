@@ -97,7 +97,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
                 Title="${categoryTitle}"
                 Margin="0,5,0,10"
                 CanSwap="True"
-                IsSwaped="${general.length > 0 || subcategories.length > 1 ? 'False' : 'True'}"
+                IsSwapped="${["new_features", "improvements", "balancing"].includes(category) ? 'False' : 'True'}"
                 Style="{StaticResource Card}">
                 <StackPanel Orientation="Vertical" Style="{StaticResource ContentStack}">
 ${contentXaml}
