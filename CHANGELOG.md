@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.4.0...v1.5.0) (2025-10-28)
+
+### ✨ Features
+
+* add fetch translation for AI and autocorrect space ([64488ef](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/64488ef975b38c350c10dfd451de5d857cdb35bd))
+
 ## [1.4.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.3.1...v1.4.0) (2025-10-27)
 
 ### ✨ Features
