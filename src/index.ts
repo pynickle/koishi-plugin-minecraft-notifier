@@ -5,6 +5,7 @@ import { promises } from 'node:fs';
 import path from 'node:path';
 import { checkNewVersionArticle } from './changelog-summarizer';
 import { upsertFileToGitCode } from './git-platform-helper';
+import { getSustemPrompt } from './prompt-const';
 
 export const name = 'minecraft-notifier';
 
@@ -208,16 +209,7 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
 
     ctx.command('mc.trigger.gitcode', '手动触发 AI 更新日志总结生成').action(
         async () => {
-            await upsertFileToGitCode(
-                ctx,
-                cfg.gitcodeOwner,
-                cfg.gitcodeRepo,
-                'Custom.xaml.ini',
-                '25w43a',
-                `feat: update PCL HomePage XAML INI for version 25w43a`,
-                cfg.gitcodeApiToken,
-                'master'
-            );
+            return await getSustemPrompt(ctx, cfg, 'jab attack');
         }
     );
 

@@ -1,5 +1,4 @@
-﻿// 定义 JSON 类型基于 schema
-import { format } from 'autocorrect-node';
+﻿import { format } from 'autocorrect-node';
 import { Context } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';

@@ -164,6 +164,7 @@ ${updateContent}
                         role: 'system',
                         content: await getSustemPrompt(
                             ctx,
+                            cfg,
                             updateContent.toLowerCase()
                         ),
                     },
