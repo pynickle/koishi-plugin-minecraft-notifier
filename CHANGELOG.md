@@ -1,3 +1,13 @@
+## [1.7.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.7.0...v1.7.1) (2025-10-28)
+
+### 🐛 Bug Fixes
+
+* remove test code and make manual trigger authority level 4 ([ee1f495](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/ee1f495e9a6dd2c2337e5d62edd63c342593ab56))
+
+### 💄 Style Improvements
+
+* lint ([1b59b0b](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/1b59b0b133eb7beeeb6786088cb51f0ec826ca4e))
+
 ## [1.7.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.6.0...v1.7.0) (2025-10-28)
 
 ### ✨ Features
