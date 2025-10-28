@@ -46,6 +46,7 @@ export interface Config {
     checkInterval: number;
     baseApiUrl: string;
     model: string;
+    enableWebSearch: boolean;
     apiKey: string;
     notifyChannel: string[];
     giteeApiToken?: string;
@@ -64,6 +65,9 @@ export const Config: Schema<Config> = Schema.object({
         .default('https://api.openai.com/v1')
         .description('AI 接口的基础 URL'),
     model: Schema.string().default('gpt-5').description('使用的 AI 模型'),
+    enableWebSearch: Schema.boolean()
+        .default(true)
+        .description('是否启用网络搜索功能'),
     apiKey: Schema.string()
         .role('secret')
         .default('')

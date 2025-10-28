@@ -152,116 +152,116 @@ ${updateContent}
 `;
 
     let response: AxiosResponse;
-    try {
-        response = await axios.post(
-            url,
+
+    const requestData = {
+        model: cfg.model,
+        temperature: 0.8,
+        messages: [
             {
-                model: cfg.model,
-                temperature: 0.8,
-                tools: [{ type: 'web_search_preview' }],
-                messages: [
-                    {
-                        role: 'system',
-                        content: await getSustemPrompt(
-                            ctx,
-                            cfg,
-                            updateContent.toLowerCase()
-                        ),
+                role: 'system',
+                content: await getSustemPrompt(
+                    ctx,
+                    cfg,
+                    updateContent.toLowerCase()
+                ),
+            },
+            {
+                role: 'user',
+                content: userPrompt,
+            },
+        ],
+        response_format: {
+            type: 'json_schema',
+            json_schema: {
+                name: 'minecraft_update_summary',
+                strict: true,
+                schema: {
+                    type: 'object',
+                    properties: {
+                        new_features: {
+                            $ref: '#/definitions/categoryGroup',
+                        },
+                        improvements: {
+                            $ref: '#/definitions/categoryGroup',
+                        },
+                        balancing: {
+                            $ref: '#/definitions/categoryGroup',
+                        },
+                        bug_fixes: {
+                            $ref: '#/definitions/categoryGroup',
+                        },
+                        technical_changes: {
+                            $ref: '#/definitions/categoryGroup',
+                        },
                     },
-                    {
-                        role: 'user',
-                        content: userPrompt,
-                    },
-                ],
-                web_search: true,
-                response_format: {
-                    type: 'json_schema',
-                    json_schema: {
-                        name: 'minecraft_update_summary',
-                        strict: true,
-                        schema: {
+                    required: [
+                        'new_features',
+                        'improvements',
+                        'balancing',
+                        'bug_fixes',
+                        'technical_changes',
+                    ],
+                    additionalProperties: false,
+                    definitions: {
+                        categoryGroup: {
                             type: 'object',
                             properties: {
-                                new_features: {
-                                    $ref: '#/definitions/categoryGroup',
+                                general: {
+                                    type: 'array',
+                                    description: '属于该大类但未细分的小项',
+                                    items: { type: 'string' },
                                 },
-                                improvements: {
-                                    $ref: '#/definitions/categoryGroup',
-                                },
-                                balancing: {
-                                    $ref: '#/definitions/categoryGroup',
-                                },
-                                bug_fixes: {
-                                    $ref: '#/definitions/categoryGroup',
-                                },
-                                technical_changes: {
-                                    $ref: '#/definitions/categoryGroup',
-                                },
-                            },
-                            required: [
-                                'new_features',
-                                'improvements',
-                                'balancing',
-                                'bug_fixes',
-                                'technical_changes',
-                            ],
-                            additionalProperties: false,
-                            definitions: {
-                                categoryGroup: {
-                                    type: 'object',
-                                    properties: {
-                                        general: {
-                                            type: 'array',
-                                            description:
-                                                '属于该大类但未细分的小项',
-                                            items: { type: 'string' },
-                                        },
-                                        subcategories: {
-                                            type: 'array',
-                                            description:
-                                                '该大类下的细分类（带 emoji）',
+                                subcategories: {
+                                    type: 'array',
+                                    description: '该大类下的细分类（带 emoji）',
+                                    items: {
+                                        type: 'object',
+                                        properties: {
+                                            subcategory: {
+                                                type: 'string',
+                                            },
+                                            emoji: {
+                                                type: 'string',
+                                                description:
+                                                    '小类前的 emoji 图标',
+                                            },
                                             items: {
-                                                type: 'object',
-                                                properties: {
-                                                    subcategory: {
-                                                        type: 'string',
-                                                    },
-                                                    emoji: {
-                                                        type: 'string',
-                                                        description:
-                                                            '小类前的 emoji 图标',
-                                                    },
-                                                    items: {
-                                                        type: 'array',
-                                                        items: {
-                                                            type: 'string',
-                                                        },
-                                                    },
+                                                type: 'array',
+                                                items: {
+                                                    type: 'string',
                                                 },
-                                                required: [
-                                                    'subcategory',
-                                                    'emoji',
-                                                    'items',
-                                                ],
-                                                additionalProperties: false,
                                             },
                                         },
+                                        required: [
+                                            'subcategory',
+                                            'emoji',
+                                            'items',
+                                        ],
+                                        additionalProperties: false,
                                     },
-                                    required: ['general', 'subcategories'],
-                                    additionalProperties: false,
                                 },
                             },
+                            required: ['general', 'subcategories'],
+                            additionalProperties: false,
                         },
                     },
                 },
             },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${cfg.apiKey}`,
-                },
-            }
-        );
+        },
+    };
+
+    if (cfg.enableWebSearch) {
+        requestData['web_search'] = true;
+        requestData['tools'] = [{ type: 'web_search_preview' }];
+    }
+
+    try {
+        response = await axios.post(url, requestData, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${cfg.apiKey}`,
+            },
+        });
     } catch (e) {
         ctx.logger('minecraft-notifier').error(
             'Summarization API error:',
