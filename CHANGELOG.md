@@ -1,3 +1,9 @@
+## [1.5.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.5.0...v1.5.1) (2025-10-28)
+
+### 🐛 Bug Fixes
+
+* use specific category to determine whether isSwapped enabled ([7f1711b](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/7f1711bdf942b0c4c563a0e776d30a5ff00f5b1a))
+
 ## [1.5.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.4.0...v1.5.0) (2025-10-28)
 
 ### ✨ Features
