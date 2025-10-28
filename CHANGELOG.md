@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.7.1...v1.8.0) (2025-10-28)
+
+### ✨ Features
+
+* add config option whether to enable web search ([2c8cbbe](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/2c8cbbe72eb62ee94b577903190e9a5b604188cb))
+
 ## [1.7.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.7.0...v1.7.1) (2025-10-28)
 
 ### 🐛 Bug Fixes
