@@ -1,4 +1,5 @@
 ﻿// 定义 JSON 类型基于 schema
+import { format } from 'autocorrect-node';
 import { Context } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
@@ -58,7 +59,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
                     <TextBlock
                         Margin="${margin}"
                         Foreground="{DynamicResource ColorBrush1}"
-                        Text="- ${msg}" />`;
+                        Text="- ${format(msg)}" />`;
         }
 
         // 子类别
@@ -80,7 +81,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
                     <TextBlock
                         ${margin}
                         Foreground="{DynamicResource ColorBrush1}"
-                        Text="  - ${msg}" />`;
+                        Text="  - ${format(msg)}" />`;
             }
             if (j < subcategories.length - 1) {
                 contentXaml += `

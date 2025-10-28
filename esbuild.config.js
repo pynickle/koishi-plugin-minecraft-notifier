@@ -11,6 +11,7 @@ await build({
         '@pynickle/koishi-plugin-adapter-onebot',
         "axios",
         "cheerio",
-        "turndown"
+        "turndown",
+        "autocorrect-node"
     ],
 })

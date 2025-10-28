@@ -1,11 +1,12 @@
 import '@pynickle/koishi-plugin-adapter-onebot';
+import { format } from 'autocorrect-node';
 import axios, { AxiosResponse } from 'axios';
 import * as cheerio from 'cheerio';
 import { Context } from 'koishi';
 import TurndownService from 'turndown';
 import { Config } from './index';
 import { createBotTextMsgNode } from './onebot-helper';
-import { systemPrompt } from './prompt-const';
+import { getSustemPrompt } from './prompt-const';
 import { getRandomUserAgent } from './web_helper';
 import { exportXaml } from './xaml-generator';
 
@@ -161,7 +162,10 @@ ${updateContent}
                 messages: [
                     {
                         role: 'system',
-                        content: systemPrompt,
+                        content: await getSustemPrompt(
+                            ctx,
+                            updateContent.toLowerCase()
+                        ),
                     },
                     {
                         role: 'user',
@@ -290,7 +294,7 @@ ${updateContent}
         // 大类通用项
         if (general.length > 0) {
             const generalList = general
-                .map((msg: string) => `- ${msg}`)
+                .map((msg: string) => `- ${format(msg)}`)
                 .join('\n');
             messages.push(
                 createBotTextMsgNode(
@@ -307,7 +311,7 @@ ${updateContent}
         for (const sub of subcategories) {
             const subHeader = `${sub.emoji} ${sub.subcategory}`;
             const subList = sub.items
-                .map((msg: string) => `- ${msg}`)
+                .map((msg: string) => `- ${format(msg)}`)
                 .join('\n');
             messages.push(
                 createBotTextMsgNode(ctx.bots[0], `${subHeader}\n${subList}`)
