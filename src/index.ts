@@ -201,15 +201,9 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
         koaCtx.response.body = articleRecord.latestVersion;
     });
 
-    ctx.command('mc.trigger', '手动触发 AI 更新日志总结生成').action(
+    ctx.command('mc.trigger', '手动触发 AI 更新日志总结生成', { authority: 4 }).action(
         async () => {
             await checkNewVersionArticle(ctx, cfg);
-        }
-    );
-
-    ctx.command('mc.trigger.gitcode', '手动触发 AI 更新日志总结生成').action(
-        async () => {
-            return await getSustemPrompt(ctx, cfg, 'jab attack');
         }
     );
 
