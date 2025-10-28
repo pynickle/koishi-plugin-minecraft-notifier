@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.6.0...v1.7.0) (2025-10-28)
+
+### ✨ Features
+
+* add Translations.txt for human translation except wiki ([882132a](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/882132aa8d012fdd10521ab4f3f17143fda4ec6f))
+
 ## [1.6.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.5.1...v1.6.0) (2025-10-28)
 
 ### ✨ Features
