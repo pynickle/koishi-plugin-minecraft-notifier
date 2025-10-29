@@ -1,3 +1,9 @@
+## [1.9.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.8.0...v1.9.0) (2025-10-29)
+
+### ✨ Features
+
+* add Custom.json server info ([d0dc8cc](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/d0dc8ccee8520ad664614361671b288c8876e573))
+
 ## [1.8.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.7.1...v1.8.0) (2025-10-28)
 
 ### ✨ Features
