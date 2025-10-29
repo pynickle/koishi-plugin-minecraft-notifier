@@ -2,7 +2,7 @@ import fs from 'fs';
 import { Context, Schema } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
-import { checkNewVersionArticle } from './changelog-summarizer';
+import { generateArticleUrl } from './helper/article-helper';
 import { checkMinecraftVersion } from './version-checker';
 
 export const name = 'minecraft-notifier';
@@ -168,14 +168,30 @@ export function apply(ctx: Context, cfg: Config) {
         });
     });
 
-    ctx.command('mc.trigger', '手动触发 AI 更新日志总结生成', {
+    ctx.command('mc.trigger', '手动触发检查 Minecraft 版本更新', {
         authority: 4,
-    }).action(async () => {
-        await checkNewVersionArticle(ctx, cfg);
-    });
+    }).action(async () => await checkMinecraftVersion(ctx, cfg));
 
     ctx.setInterval(
         async () => await checkMinecraftVersion(ctx, cfg),
         60000 * cfg.checkInterval
+    );
+
+    ctx.command('mc.version', '查询当前已记录的 Minecraft 版本信息').action(
+        async () => {
+            const record = (await ctx.database.get('minecraft_notifier', 1))[0];
+
+            if (!record) {
+                return '❌ 当前暂无已记录的版本信息，请稍后再试。';
+            }
+
+            return `📢 当前已记录的最新 Minecraft 版本信息：
+            
+📢 正式版：${record.lastRelease}
+🌟 正式版更新日志：${generateArticleUrl(record.lastRelease, false)}
+
+🎉 快照版：${record.lastSnapshot}
+🧪 快照版更新日志：${generateArticleUrl(record.lastSnapshot, true)}`;
+        }
     );
 }

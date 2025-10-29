@@ -67,7 +67,10 @@ const notifyReleaseVersion = async (
 ): Promise<void> => {
     const bot = ctx.bots[0];
     for (const channel of cfg.notifyChannel) {
-        await bot.sendMessage(channel, `📢 Minecraft 新正式版发布了：${version}`);
+        await bot.sendMessage(
+            channel,
+            `📢 Minecraft 新正式版发布了：${version}`
+        );
     }
 };
 
@@ -78,7 +81,10 @@ const notifySnapshotVersion = async (
 ): Promise<void> => {
     const bot = ctx.bots[0];
     for (const channel of cfg.notifyChannel) {
-        await bot.sendMessage(channel, `🎉 Minecraft 新快照版发布了：${version}`);
+        await bot.sendMessage(
+            channel,
+            `🎉 Minecraft 新快照版发布了：${version}`
+        );
     }
 };
 
