@@ -196,7 +196,7 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
     });
 
     ctx.server.get('/Custom.xaml.ini', async (koaCtx: any) => {
-        koaCtx.set('charset=utf-8');
+        koaCtx.set('Content-Type: text/plain; charset=utf-8');
 
         const articleRecord = (
             await ctx.database.get('minecraft_article_version', 1)
@@ -204,6 +204,15 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
 
         koaCtx.response.body = articleRecord.latestVersion;
     });
+
+    ctx.server.get('/Custom.json', async (koaCtx: any) => {
+        koaCtx.set('Content-Type', 'application/json; charset=utf-8');
+
+        koaCtx.response.body = JSON.stringify({
+            Title: "Minecraft 更新摘要",
+        })
+    })
+
 
     ctx.command('mc.trigger', '手动触发 AI 更新日志总结生成', {
         authority: 4,
