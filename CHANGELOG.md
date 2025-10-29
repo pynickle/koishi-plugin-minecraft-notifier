@@ -1,3 +1,9 @@
+## [1.9.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.9.0...v1.9.1) (2025-10-29)
+
+### ♻️ Code Refactoring
+
+* improve code and add emoji for message to notify ([a5a984b](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/a5a984bd75c9e4792cdbaebef6e11c634d0fdf8d))
+
 ## [1.9.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.8.0...v1.9.0) (2025-10-29)
 
 ### ✨ Features
