@@ -1,3 +1,9 @@
+## [1.10.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.9.1...v1.10.0) (2025-10-29)
+
+### ✨ Features
+
+* add mc.version command ([c2c7ec1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/c2c7ec1ffa7452134b31520f1fb8c038be9c6dd2))
+
 ## [1.9.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.9.0...v1.9.1) (2025-10-29)
 
 ### ♻️ Code Refactoring
