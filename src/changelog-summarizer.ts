@@ -4,10 +4,10 @@ import axios, { AxiosResponse } from 'axios';
 import * as cheerio from 'cheerio';
 import { Context } from 'koishi';
 import TurndownService from 'turndown';
+import { createBotTextMsgNode } from './helper/onebot-helper';
+import { getRandomUserAgent } from './helper/web-helper';
 import { Config } from './index';
-import { createBotTextMsgNode } from './onebot-helper';
 import { getSustemPrompt } from './prompt-const';
-import { getRandomUserAgent } from './web_helper';
 import { exportXaml } from './xaml-generator';
 
 export const minecraftSummaryTypeMap: Record<string, string> = {

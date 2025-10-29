@@ -1,11 +1,9 @@
-import axios from 'axios';
 import fs from 'fs';
 import { Context, Schema } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { checkNewVersionArticle } from './changelog-summarizer';
-import { upsertFileToGitCode } from './git-platform-helper';
-import { getSustemPrompt } from './prompt-const';
+import { checkMinecraftVersion } from './version-checker';
 
 export const name = 'minecraft-notifier';
 
@@ -94,7 +92,7 @@ export const Config: Schema<Config> = Schema.object({
     gitcodeRepo: Schema.string().default('').description('GitCode 仓库名称'),
 });
 
-export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
+export function apply(ctx: Context, cfg: Config) {
     ctx.database.extend(
         'minecraft_notifier',
         {
@@ -129,49 +127,6 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
         },
         { primary: 'id' }
     );
-
-    let lastRelease = '';
-    let lastSnapshot = '';
-
-    const loadData = async () => {
-        const record = (await ctx.database.get('minecraft_notifier', 1))[0];
-        if (record) {
-            lastRelease = record.lastRelease;
-            lastSnapshot = record.lastSnapshot;
-        }
-    };
-
-    const saveData = async () => {
-        await ctx.database.upsert('minecraft_notifier', [
-            { id: 1, lastRelease, lastSnapshot },
-        ]);
-    };
-
-    const getLatestVersions = async () => {
-        let retries = 0;
-        while (retries <= 3) {
-            try {
-                const response = await axios.get(
-                    'https://launchermeta.mojang.com/mc/game/version_manifest.json',
-                    {
-                        timeout: 10000,
-                    }
-                );
-                const data = response.data;
-                return {
-                    release: data.latest.release,
-                    snapshot: data.latest.snapshot,
-                };
-            } catch (error) {
-                retries++;
-                if (retries <= 3) {
-                    await new Promise((resolve) =>
-                        setTimeout(resolve, Math.pow(2, retries) * 1000)
-                    );
-                }
-            }
-        }
-    };
 
     const xamlPath = path.join(
         ctx.baseDir,
@@ -209,10 +164,9 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
         koaCtx.set('Content-Type', 'application/json; charset=utf-8');
 
         koaCtx.response.body = JSON.stringify({
-            Title: "Minecraft 更新摘要",
-        })
-    })
-
+            Title: 'Minecraft 更新摘要',
+        });
+    });
 
     ctx.command('mc.trigger', '手动触发 AI 更新日志总结生成', {
         authority: 4,
@@ -220,43 +174,8 @@ export function apply(ctx: Context, cfg: Config & { articleTracker: any }) {
         await checkNewVersionArticle(ctx, cfg);
     });
 
-    ctx.setInterval(async () => {
-        try {
-            await loadData();
-            const latest = await getLatestVersions();
-
-            const bot = ctx.bots[0];
-            if (lastRelease !== latest.release) {
-                for (const channel of cfg.notifyChannel) {
-                    await bot.sendMessage(
-                        channel,
-                        `Minecraft 新正式版发布了：${latest.release}`
-                    );
-                }
-                lastRelease = latest.release;
-            }
-
-            if (
-                lastSnapshot !== latest.snapshot &&
-                lastRelease != latest.snapshot
-            ) {
-                for (const channel of cfg.notifyChannel) {
-                    await bot.sendMessage(
-                        channel,
-                        `Minecraft 新快照版发布了：${latest.snapshot}`
-                    );
-                }
-                lastSnapshot = latest.snapshot;
-            }
-
-            await saveData();
-
-            await checkNewVersionArticle(ctx, cfg);
-        } catch (error) {
-            ctx.logger('minecraft-notifier').error(
-                '检查 Minecraft 版本时出错：',
-                error
-            );
-        }
-    }, 60000 * cfg.checkInterval);
+    ctx.setInterval(
+        async () => await checkMinecraftVersion(ctx, cfg),
+        60000 * cfg.checkInterval
+    );
 }

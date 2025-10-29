@@ -1,4 +1,4 @@
-﻿import { Bot, Session } from 'koishi';
+﻿import { Bot } from 'koishi';
 
 export function createBotTextMsgNode(bot: Bot, content: string) {
     return {

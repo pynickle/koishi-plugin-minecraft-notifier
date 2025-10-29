@@ -3,7 +3,10 @@ import { Context } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
 import { minecraftSummaryTypeMap } from './changelog-summarizer';
-import { upsertFileToGitCode, upsertFileToGitee } from './git-platform-helper';
+import {
+    upsertFileToGitCode,
+    upsertFileToGitee,
+} from './helper/git-platform-helper';
 import { Config } from './index';
 
 interface Subcategory {
