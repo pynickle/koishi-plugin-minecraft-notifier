@@ -1,3 +1,9 @@
+## [1.10.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.10.0...v1.10.1) (2025-11-04)
+
+### 🚀 Improvements
+
+* improve summarizer's logic ([0c6d97a](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/0c6d97a590c61c9f99cee88216930e1671a3636b))
+
 ## [1.10.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.9.1...v1.10.0) (2025-10-29)
 
 ### ✨ Features
