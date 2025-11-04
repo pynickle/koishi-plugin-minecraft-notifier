@@ -1,3 +1,9 @@
+## [1.10.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.10.1...v1.10.2) (2025-11-04)
+
+### 🐛 Bug Fixes
+
+* fix xaml escape problem ([58d7541](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/58d7541657841f34128594f60e2c176460616720))
+
 ## [1.10.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.10.0...v1.10.1) (2025-11-04)
 
 ### 🚀 Improvements
