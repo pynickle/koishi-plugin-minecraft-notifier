@@ -7,6 +7,7 @@ import {
     upsertFileToGitCode,
     upsertFileToGitee,
 } from './helper/git-platform-helper';
+import { escapeForXaml } from './helper/xaml-helper';
 import { Config } from './index';
 
 interface Subcategory {
@@ -61,7 +62,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
                     <TextBlock
                         Margin="${margin}"
                         Foreground="{DynamicResource ColorBrush1}"
-                        Text="- ${format(msg)}" />`;
+                        Text="- ${escapeForXaml(format(msg))}" />`;
         }
 
         // 子类别
@@ -72,7 +73,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
                         Margin="0,0,0,4"
                         FontSize="14"
                         Foreground="{DynamicResource ColorBrush3}"
-                        Text="${sub.emoji} ${sub.subcategory}" />`;
+                        Text="${sub.emoji} ${escapeForXaml(format(sub.subcategory))}" />`;
             for (let k = 0; k < sub.items.length; k++) {
                 const msg = sub.items[k];
                 const margin =
@@ -83,7 +84,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
                     <TextBlock
                         ${margin}
                         Foreground="{DynamicResource ColorBrush1}"
-                        Text="  - ${format(msg)}" />`;
+                        Text="  - ${escapeForXaml(format(msg))}" />`;
             }
             if (j < subcategories.length - 1) {
                 contentXaml += `
@@ -96,7 +97,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
         categoriesXaml += `
             <!--  ${categoryTitle}卡片  -->
             <local:MyCard
-                Title="${categoryTitle}"
+                Title="${escapeForXaml(format(categoryTitle))}"
                 Margin="0,5,0,10"
                 CanSwap="True"
                 IsSwapped="${['new_features', 'improvements', 'balancing'].includes(category) ? 'False' : 'True'}"
