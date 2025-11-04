@@ -70,6 +70,11 @@ async function checkVersionUpdate(
     const currentTryTime = articleRecord[tryTimeKey];
     const newVersion = notifierRecord[versionKey];
 
+    await updateArticleRecord(ctx, {
+        [versionKey]: newVersion,
+        latestVersion: newVersion,
+    });
+
     // 尝试处理新版本文章
     const success = await processNewVersionArticle(
         ctx,
@@ -81,9 +86,7 @@ async function checkVersionUpdate(
     if (success) {
         // 成功：更新版本记录并重置尝试次数
         await updateArticleRecord(ctx, {
-            [versionKey]: newVersion,
             [tryTimeKey]: 0,
-            latestVersion: newVersion,
         });
         return true;
     }
@@ -94,13 +97,13 @@ async function checkVersionUpdate(
     // 达到最大尝试次数，重置计数器并跳过此版本
     if (newTryTime >= 5) {
         await updateArticleRecord(ctx, {
-            [versionKey]: newVersion,
             [tryTimeKey]: 0,
-            latestVersion: newVersion,
         });
     } else {
         // 未达到最大次数，仅更新尝试次数
         await updateArticleRecord(ctx, {
+            [versionKey]: articleRecord[versionKey],
+            latestVersion: articleRecord[versionKey],
             [tryTimeKey]: newTryTime,
         });
     }
