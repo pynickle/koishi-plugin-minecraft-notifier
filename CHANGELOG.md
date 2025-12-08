@@ -1,3 +1,10 @@
+## [1.10.4](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.10.3...v1.10.4) (2025-12-08)
+
+### 🔧 Miscellaneous Changes
+
+* **deps:** update dependency oxfmt to ^0.17.0 ([7938438](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/7938438a39f650adcf90f6bcb3ad030e8abca998))
+* **deps:** update dependency oxlint to v1.32.0 ([a1f2f13](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/a1f2f13502dd0064e2e61cb32e52e3eb8b6349c7))
+
 ## [1.10.3](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.10.2...v1.10.3) (2025-12-04)
 
 ### 🔧 Miscellaneous Changes
