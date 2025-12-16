@@ -1,12 +1,8 @@
-﻿import { Context } from 'koishi';
 import { Config } from './index';
 import { extractTranslations } from './translation-fetcher';
+import { Context } from 'koishi';
 
-export async function getSustemPrompt(
-    ctx: Context,
-    cfg: Config,
-    searchStr: string
-) {
+export async function getSustemPrompt(ctx: Context, cfg: Config, searchStr: string) {
     const translations = await extractTranslations(ctx, cfg, searchStr);
     return `
 # Role: Minecraft Update Log JSON Summarization Specialist

@@ -1,7 +1,7 @@
-﻿import axios from 'axios';
-import { Context } from 'koishi';
 import { checkNewVersionArticle } from './changelog-summarizer';
 import { Config } from './index';
+import axios from 'axios';
+import { Context } from 'koishi';
 
 interface VersionData {
     lastRelease: string;
@@ -52,46 +52,27 @@ const getLatestVersions = async (): Promise<LatestVersions | undefined> => {
         } catch (error) {
             retries++;
             if (retries <= 3) {
-                await new Promise((resolve) =>
-                    setTimeout(resolve, Math.pow(2, retries) * 1000)
-                );
+                await new Promise((resolve) => setTimeout(resolve, Math.pow(2, retries) * 1000));
             }
         }
     }
 };
 
-const notifyReleaseVersion = async (
-    ctx: Context,
-    cfg: Config,
-    version: string
-): Promise<void> => {
+const notifyReleaseVersion = async (ctx: Context, cfg: Config, version: string): Promise<void> => {
     const bot = ctx.bots[0];
     for (const channel of cfg.notifyChannel) {
-        await bot.sendMessage(
-            channel,
-            `📢 Minecraft 新正式版发布了：${version}`
-        );
+        await bot.sendMessage(channel, `📢 Minecraft 新正式版发布了：${version}`);
     }
 };
 
-const notifySnapshotVersion = async (
-    ctx: Context,
-    cfg: Config,
-    version: string
-): Promise<void> => {
+const notifySnapshotVersion = async (ctx: Context, cfg: Config, version: string): Promise<void> => {
     const bot = ctx.bots[0];
     for (const channel of cfg.notifyChannel) {
-        await bot.sendMessage(
-            channel,
-            `🎉 Minecraft 新快照版发布了：${version}`
-        );
+        await bot.sendMessage(channel, `🎉 Minecraft 新快照版发布了：${version}`);
     }
 };
 
-export const checkMinecraftVersion = async (
-    ctx: Context,
-    cfg: Config
-): Promise<void> => {
+export const checkMinecraftVersion = async (ctx: Context, cfg: Config): Promise<void> => {
     try {
         const versionData = await loadData(ctx);
         const latest = await getLatestVersions();
@@ -105,7 +86,7 @@ export const checkMinecraftVersion = async (
 
         if (
             versionData.lastSnapshot !== latest.snapshot &&
-            versionData.lastRelease != latest.snapshot
+            latest.release != latest.snapshot
         ) {
             await notifySnapshotVersion(ctx, cfg, latest.snapshot);
             updatedData.lastSnapshot = latest.snapshot;
@@ -115,9 +96,6 @@ export const checkMinecraftVersion = async (
 
         await checkNewVersionArticle(ctx, cfg);
     } catch (error) {
-        ctx.logger('minecraft-notifier').error(
-            'Error checking Minecraft versions:',
-            error
-        );
+        ctx.logger('minecraft-notifier').error('Error checking Minecraft versions:', error);
     }
 };

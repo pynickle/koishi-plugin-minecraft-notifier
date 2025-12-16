@@ -1,7 +1,7 @@
-﻿import axios from 'axios';
+import { Config } from './index';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Context } from 'koishi';
-import { Config } from './index';
 
 /**
  * 翻译对类型
@@ -37,16 +37,12 @@ async function fetchGitCodeTranslations(
         });
 
         if (!response.data?.content) {
-            ctx.logger('translation-extractor').warn(
-                'GitCode file has no content'
-            );
+            ctx.logger('translation-extractor').warn('GitCode file has no content');
             return [];
         }
 
         // 解码 Base64 内容
-        const content = Buffer.from(response.data.content, 'base64').toString(
-            'utf-8'
-        );
+        const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
 
         // 解析翻译列表（支持多种格式）
         return parseTranslationContent(content);
@@ -103,28 +99,20 @@ function parseTranslationContent(content: string): TranslationPair[] {
 
         for (const line of lines) {
             const trimmed = line.trim();
-            if (
-                !trimmed ||
-                trimmed.startsWith('#') ||
-                trimmed.startsWith('//')
-            ) {
+            if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
                 continue; // 跳过空行和注释
             }
 
             // 尝试冒号分隔
             if (trimmed.includes(':')) {
-                const [english, chinese] = trimmed
-                    .split(':')
-                    .map((s) => s.trim());
+                const [english, chinese] = trimmed.split(':').map((s) => s.trim());
                 if (english && chinese) {
                     translations.push({ english, chinese });
                 }
             }
             // 尝试逗号分隔
             else if (trimmed.includes(',')) {
-                const [english, chinese] = trimmed
-                    .split(',')
-                    .map((s) => s.trim());
+                const [english, chinese] = trimmed.split(',').map((s) => s.trim());
                 if (english && chinese) {
                     translations.push({ english, chinese });
                 }
@@ -159,16 +147,10 @@ async function fetchWikiTranslations(ctx: Context): Promise<TranslationPair[]> {
                     // 解析表头
                     cells.each((colIndex, cell) => {
                         const headerText = $(cell).text().trim();
-                        if (
-                            headerText.includes('英文') ||
-                            headerText.includes('English')
-                        ) {
+                        if (headerText.includes('英文') || headerText.includes('English')) {
                             englishCol = colIndex;
                         }
-                        if (
-                            headerText.includes('中文') ||
-                            headerText.includes('Chinese')
-                        ) {
+                        if (headerText.includes('中文') || headerText.includes('Chinese')) {
                             chineseCol = colIndex;
                         }
                     });
@@ -189,25 +171,9 @@ async function fetchWikiTranslations(ctx: Context): Promise<TranslationPair[]> {
 
         return translations;
     } catch (error) {
-        ctx.logger('translation-extractor').warn(
-            'Failed to fetch Wiki translations:',
-            error
-        );
+        ctx.logger('translation-extractor').warn('Failed to fetch Wiki translations:', error);
         return [];
     }
-}
-
-/**
- * 过滤匹配的翻译对
- */
-function filterTranslations(
-    translations: TranslationPair[],
-    searchStr: string
-): TranslationPair[] {
-    const lowerSearchStr = searchStr.toLowerCase();
-    return translations.filter(({ english }) =>
-        lowerSearchStr.includes(english.toLowerCase())
-    );
 }
 
 /**
@@ -267,14 +233,9 @@ export async function extractTranslations(
         }
 
         // 格式化输出
-        return matches
-            .map(({ english, chinese }) => `${english}: ${chinese}`)
-            .join('\n');
+        return matches.map(({ english, chinese }) => `${english}: ${chinese}`).join('\n');
     } catch (error) {
-        ctx.logger('translation-extractor').warn(
-            'Failed to extract translations:',
-            error
-        );
+        ctx.logger('translation-extractor').warn('Failed to extract translations:', error);
         return '';
     }
 }

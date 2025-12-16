@@ -1,14 +1,11 @@
-﻿import { format } from 'autocorrect-node';
+import { minecraftSummaryTypeMap } from './changelog-summarizer';
+import { upsertFileToGitCode, upsertFileToGitee } from './helper/git-platform-helper';
+import { escapeForXaml } from './helper/xaml-helper';
+import { Config } from './index';
+import { format } from 'autocorrect-node';
 import { Context } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
-import { minecraftSummaryTypeMap } from './changelog-summarizer';
-import {
-    upsertFileToGitCode,
-    upsertFileToGitee,
-} from './helper/git-platform-helper';
-import { escapeForXaml } from './helper/xaml-helper';
-import { Config } from './index';
 
 interface Subcategory {
     subcategory: string;
@@ -55,9 +52,7 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
         for (let i = 0; i < general.length; i++) {
             const msg = general[i];
             const margin =
-                i === general.length - 1 && subcategories.length > 0
-                    ? '0,0,0,10'
-                    : '0,0,0,2';
+                i === general.length - 1 && subcategories.length > 0 ? '0,0,0,10' : '0,0,0,2';
             contentXaml += `
                     <TextBlock
                         Margin="${margin}"
@@ -179,12 +174,7 @@ export async function exportXaml(
     version: string
 ): Promise<string> {
     const xaml = generateXaml(summary, version);
-    const xamlPath = path.join(
-        ctx.baseDir,
-        'data',
-        'minecraft-notifier',
-        'xaml'
-    );
+    const xamlPath = path.join(ctx.baseDir, 'data', 'minecraft-notifier', 'xaml');
     const xamlName = `${version}.xaml`;
     let fullXamlPath = path.join(xamlPath, xamlName);
     let fullHomePagePath = path.join(xamlPath, 'PCL.HomePage.xaml');
@@ -203,14 +193,9 @@ export async function exportXaml(
             'master'
         ).then((result) => {
             if (result.success) {
-                ctx.logger('minecraft-notifier').info(
-                    'Upsert successful of gitee.'
-                );
+                ctx.logger('minecraft-notifier').info('Upsert successful of gitee.');
             } else {
-                ctx.logger('minecraft-notifier').warn(
-                    'Upsert failed of gitee:',
-                    result.error
-                );
+                ctx.logger('minecraft-notifier').warn('Upsert failed of gitee:', result.error);
             }
         });
 
@@ -238,14 +223,9 @@ export async function exportXaml(
             'master'
         ).then((result) => {
             if (result.success) {
-                ctx.logger('minecraft-notifier').info(
-                    'Upsert successful of gitcode.'
-                );
+                ctx.logger('minecraft-notifier').info('Upsert successful of gitcode.');
             } else {
-                ctx.logger('minecraft-notifier').warn(
-                    'Upsert failed of gitcode:',
-                    result.error
-                );
+                ctx.logger('minecraft-notifier').warn('Upsert failed of gitcode:', result.error);
             }
         });
 

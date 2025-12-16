@@ -1,15 +1,15 @@
 import '@pynickle/koishi-plugin-adapter-onebot';
-import { format } from 'autocorrect-node';
-import axios, { AxiosResponse } from 'axios';
-import * as cheerio from 'cheerio';
-import { Context } from 'koishi';
-import TurndownService from 'turndown';
 import { generateArticleUrl } from './helper/article-helper';
 import { createBotTextMsgNode } from './helper/onebot-helper';
 import { getRandomUserAgent } from './helper/web-helper';
 import { Config } from './index';
 import { getSustemPrompt } from './prompt-const';
 import { exportXaml } from './xaml-generator';
+import { format } from 'autocorrect-node';
+import axios, { AxiosResponse } from 'axios';
+import * as cheerio from 'cheerio';
+import { Context } from 'koishi';
+import TurndownService from 'turndown';
 
 export const minecraftSummaryTypeMap: Record<string, string> = {
     new_features: '✨ 新特性',
@@ -21,9 +21,7 @@ export const minecraftSummaryTypeMap: Record<string, string> = {
 
 export async function checkNewVersionArticle(ctx: Context, cfg: Config) {
     const [articleRecord, notifierRecord] = await Promise.all([
-        ctx.database
-            .get('minecraft_article_version', 1)
-            .then((records) => records[0]),
+        ctx.database.get('minecraft_article_version', 1).then((records) => records[0]),
         ctx.database.get('minecraft_notifier', 1).then((records) => records[0]),
     ]);
 
@@ -76,12 +74,7 @@ async function checkVersionUpdate(
     });
 
     // 尝试处理新版本文章
-    const success = await processNewVersionArticle(
-        ctx,
-        cfg,
-        newVersion,
-        isSnapshot
-    );
+    const success = await processNewVersionArticle(ctx, cfg, newVersion, isSnapshot);
 
     if (success) {
         // 成功：更新版本记录并重置尝试次数
@@ -112,9 +105,7 @@ async function checkVersionUpdate(
 }
 
 async function updateArticleRecord(ctx: Context, updates: Record<string, any>) {
-    await ctx.database.upsert('minecraft_article_version', [
-        { id: 1, ...updates },
-    ]);
+    await ctx.database.upsert('minecraft_article_version', [{ id: 1, ...updates }]);
 }
 
 export async function processNewVersionArticle(
@@ -126,11 +117,9 @@ export async function processNewVersionArticle(
     ctx.logger('minecraft-notifier').info(
         `Processing new ${isSnapshot ? 'snapshot' : 'release'} version: ${version}`
     );
-    const content = await fetchArticleContent(ctx, version, isSnapshot);
+    const content = await fetchArticleContent(ctx, version);
     if (!content) {
-        ctx.logger('minecraft-notifier').warn(
-            `No content found for version ${version}`
-        );
+        ctx.logger('minecraft-notifier').warn(`No content found for version ${version}`);
         return;
     }
     ctx.logger('minecraft-notifier').info(
@@ -163,11 +152,7 @@ ${updateContent}
         messages: [
             {
                 role: 'system',
-                content: await getSustemPrompt(
-                    ctx,
-                    cfg,
-                    updateContent.toLowerCase()
-                ),
+                content: await getSustemPrompt(ctx, cfg, updateContent.toLowerCase()),
             },
             {
                 role: 'user',
@@ -226,8 +211,7 @@ ${updateContent}
                                             },
                                             emoji: {
                                                 type: 'string',
-                                                description:
-                                                    '小类前的 emoji 图标',
+                                                description: '小类前的 emoji 图标',
                                             },
                                             items: {
                                                 type: 'array',
@@ -236,11 +220,7 @@ ${updateContent}
                                                 },
                                             },
                                         },
-                                        required: [
-                                            'subcategory',
-                                            'emoji',
-                                            'items',
-                                        ],
+                                        required: ['subcategory', 'emoji', 'items'],
                                         additionalProperties: false,
                                     },
                                 },
@@ -267,10 +247,7 @@ ${updateContent}
             },
         });
     } catch (e) {
-        ctx.logger('minecraft-notifier').error(
-            'Summarization API error:',
-            e.response?.data
-        );
+        ctx.logger('minecraft-notifier').error('Summarization API error:', e.response?.data);
         return false;
     }
 
@@ -281,9 +258,7 @@ ${updateContent}
         `Summarization completed for version ${version}. Preparing to send notifications...`
     );
 
-    const messages = [
-        createBotTextMsgNode(ctx.bots[0], `=== ${version} 更新总结 ===`),
-    ];
+    const messages = [createBotTextMsgNode(ctx.bots[0], `=== ${version} 更新总结 ===`)];
 
     const orderedCategories = Object.keys(minecraftSummaryTypeMap);
 
@@ -298,15 +273,8 @@ ${updateContent}
 
         // 大类通用项
         if (general.length > 0) {
-            const generalList = general
-                .map((msg: string) => `- ${format(msg)}`)
-                .join('\n');
-            messages.push(
-                createBotTextMsgNode(
-                    ctx.bots[0],
-                    `${categoryTitle}\n${generalList}`
-                )
-            );
+            const generalList = general.map((msg: string) => `- ${format(msg)}`).join('\n');
+            messages.push(createBotTextMsgNode(ctx.bots[0], `${categoryTitle}\n${generalList}`));
         } else if (subcategories.length > 0) {
             // 无通用项但有子类时，先推送单独的大类标题
             messages.push(createBotTextMsgNode(ctx.bots[0], categoryTitle));
@@ -315,12 +283,8 @@ ${updateContent}
         // 子类分组
         for (const sub of subcategories) {
             const subHeader = `${sub.emoji} ${sub.subcategory}`;
-            const subList = sub.items
-                .map((msg: string) => `- ${format(msg)}`)
-                .join('\n');
-            messages.push(
-                createBotTextMsgNode(ctx.bots[0], `${subHeader}\n${subList}`)
-            );
+            const subList = sub.items.map((msg: string) => `- ${format(msg)}`).join('\n');
+            messages.push(createBotTextMsgNode(ctx.bots[0], `${subHeader}\n${subList}`));
         }
     }
 
@@ -334,21 +298,15 @@ ${updateContent}
 
     await exportXaml(ctx, cfg, summary, version);
 
-    ctx.logger('minecraft-notifier').info(
-        `XAML generation completed for version ${version}.`
-    );
+    ctx.logger('minecraft-notifier').info(`XAML generation completed for version ${version}.`);
 
     return true;
 }
 
 const turndownService = new TurndownService({});
 
-export async function fetchArticleContent(
-    ctx: Context,
-    version: string,
-    isSnapshot: boolean
-): Promise<string> {
-    const url = generateArticleUrl(version, isSnapshot);
+export async function fetchArticleContent(ctx: Context, version: string): Promise<string> {
+    const url = generateArticleUrl(version);
 
     try {
         const response = await axios.get(url, {

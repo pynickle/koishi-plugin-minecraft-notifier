@@ -53,15 +53,7 @@ async function upsertFileToGitPlatform(
     platform: GitPlatform,
     params: FileUploadParams
 ): Promise<OperationResult> {
-    const {
-        owner,
-        repo,
-        path,
-        content,
-        message,
-        token,
-        branch = 'master',
-    } = params;
+    const { owner, repo, path, content, message, token, branch = 'master' } = params;
     const config = PLATFORM_CONFIG[platform];
     const loggerName = `${platform}-uploader`;
 
