@@ -160,9 +160,9 @@ export function apply(ctx: Context, cfg: Config) {
         return `📢 当前已记录的最新 Minecraft 版本信息：
             
 📢 正式版：${record.lastRelease}
-🌟 正式版更新日志：${generateArticleUrl(record.lastRelease, false)}
+🌟 正式版更新日志：${generateArticleUrl(record.lastRelease)}
 
 🎉 快照版：${record.lastSnapshot}
-🧪 快照版更新日志：${generateArticleUrl(record.lastSnapshot, true)}`;
+🧪 快照版更新日志：${generateArticleUrl(record.lastSnapshot)}`;
     });
 }
