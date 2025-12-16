@@ -1,3 +1,18 @@
+## [1.11.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.10.4...v1.11.0) (2025-12-16)
+
+### ✨ Features
+
+* update to match the newest version number format and fix the bug to notify twice when having new release ([ae5dadb](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/ae5dadb7324f7f4a5399bce13c5e59cecc4e327b))
+
+### 🐛 Bug Fixes
+
+* small fix ([0b5d633](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/0b5d633c23f7ec0cc5d6f3a073c0147f6a9f7d7e))
+
+### 🔧 Miscellaneous Changes
+
+* **deps:** update actions/checkout action to v6 ([da0a477](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/da0a4778c049a63ebeb7024ecdc22e5c61cdfd31))
+* **deps:** update actions/setup-node action to v6 ([49151ea](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/49151ea236133c10016a1c1f1c9f5c4dc6a0e5c9))
+
 ## [1.10.4](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.10.3...v1.10.4) (2025-12-08)
 
 ### 🔧 Miscellaneous Changes
