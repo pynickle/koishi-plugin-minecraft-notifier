@@ -84,10 +84,7 @@ export const checkMinecraftVersion = async (ctx: Context, cfg: Config): Promise<
             updatedData.lastRelease = latest.release;
         }
 
-        if (
-            versionData.lastSnapshot !== latest.snapshot &&
-            latest.release != latest.snapshot
-        ) {
+        if (versionData.lastSnapshot !== latest.snapshot && latest.release != latest.snapshot) {
             await notifySnapshotVersion(ctx, cfg, latest.snapshot);
             updatedData.lastSnapshot = latest.snapshot;
         }
