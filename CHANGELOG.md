@@ -1,3 +1,11 @@
+## [1.11.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.11.0...v1.11.1) (2026-01-04)
+
+### 🔧 Miscellaneous Changes
+
+* add missing dependencies ([b999657](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/b9996571a49d9f00e10a2797240d606a2f8fdcb3))
+* update auto publish workflow [skip ci] ([9286566](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/9286566d41ca877d36e6aa1c23ab9c70a72bd60f))
+* update dependencies ([5202dbc](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/5202dbc477284d3229d109e97cdd6c710557403f))
+
 ## [1.11.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.10.4...v1.11.0) (2025-12-16)
 
 ### ✨ Features
