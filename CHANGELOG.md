@@ -1,3 +1,9 @@
+## [1.12.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.11.3...v1.12.0) (2026-02-01)
+
+### ✨ Features
+
+* remove gitee part ([597cea1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/597cea1e2f2b21de286a606d1aae41e7c604c6bc))
+
 ## [1.11.3](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.11.2...v1.11.3) (2026-02-01)
 
 ### 🔧 Miscellaneous Changes
