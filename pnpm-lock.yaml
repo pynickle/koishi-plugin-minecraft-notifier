@@ -21,7 +21,7 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       koishi:
-        specifier: ^4.18.9
+        specifier: ^4.18.10
         version: 4.18.10(@cordisjs/plugin-http@0.6.3(cordis@3.18.1))(cordis@3.18.1)
       turndown:
         specifier: ^7.2.2
