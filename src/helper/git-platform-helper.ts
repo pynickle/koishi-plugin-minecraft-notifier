@@ -1,11 +1,10 @@
-﻿import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Context } from 'koishi';
 
 /**
  * Git 平台类型
  */
 export enum GitPlatform {
-    GITEE = 'gitee',
     GITCODE = 'gitcode',
 }
 
@@ -13,10 +12,6 @@ export enum GitPlatform {
  * Git 平台配置
  */
 const PLATFORM_CONFIG = {
-    [GitPlatform.GITEE]: {
-        baseUrl: 'https://gitee.com/api/v5',
-        name: 'Gitee',
-    },
     [GitPlatform.GITCODE]: {
         baseUrl: 'https://api.gitcode.com/api/v5',
         name: 'GitCode',
@@ -125,39 +120,6 @@ async function upsertFileToGitPlatform(
             error: error.response?.data?.message || error.message,
         };
     }
-}
-
-/**
- * 上传或更新 Gitee 仓库中的文本文件
- * @param ctx - Koishi 上下文
- * @param owner - 仓库所有者用户名
- * @param repo - 仓库名称
- * @param path - 文件路径（例如 'docs/update.txt'）
- * @param content - 文件内容（纯文本字符串，会自动 Base64 编码）
- * @param message - Commit 消息
- * @param token - Gitee Personal Access Token
- * @param branch - 分支名（默认 'master'）
- * @returns Promise<OperationResult>
- */
-export async function upsertFileToGitee(
-    ctx: Context,
-    owner: string,
-    repo: string,
-    path: string,
-    content: string,
-    message: string,
-    token: string,
-    branch: string = 'master'
-): Promise<OperationResult> {
-    return upsertFileToGitPlatform(ctx, GitPlatform.GITEE, {
-        owner,
-        repo,
-        path,
-        content,
-        message,
-        token,
-        branch,
-    });
 }
 
 /**

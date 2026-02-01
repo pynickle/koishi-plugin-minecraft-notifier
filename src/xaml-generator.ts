@@ -1,5 +1,5 @@
 import { minecraftSummaryTypeMap } from './changelog-summarizer';
-import { upsertFileToGitCode, upsertFileToGitee } from './helper/git-platform-helper';
+import { upsertFileToGitCode } from './helper/git-platform-helper';
 import { escapeForXaml } from './helper/xaml-helper';
 import { Config } from './index';
 import { format } from 'autocorrect-node';
@@ -181,35 +181,6 @@ export async function exportXaml(
 
     await promises.writeFile(fullXamlPath, xaml);
     await promises.copyFile(fullXamlPath, fullHomePagePath);
-    if (cfg.giteeApiToken && cfg.giteeOwner && cfg.giteeRepo) {
-        await upsertFileToGitee(
-            ctx,
-            cfg.giteeOwner,
-            cfg.giteeRepo,
-            'Custom.xaml',
-            xaml,
-            `feat: update PCL HomePage XAML for version ${version}`,
-            cfg.giteeApiToken,
-            'master'
-        ).then((result) => {
-            if (result.success) {
-                ctx.logger('minecraft-notifier').info('Upsert successful of gitee.');
-            } else {
-                ctx.logger('minecraft-notifier').warn('Upsert failed of gitee:', result.error);
-            }
-        });
-
-        await upsertFileToGitee(
-            ctx,
-            cfg.giteeOwner,
-            cfg.giteeRepo,
-            'Custom.xaml.ini',
-            version,
-            `feat: update PCL HomePage XAML INI for version ${version}`,
-            cfg.giteeApiToken,
-            'master'
-        );
-    }
 
     if (cfg.gitcodeApiToken && cfg.gitcodeOwner && cfg.gitcodeRepo) {
         await upsertFileToGitCode(

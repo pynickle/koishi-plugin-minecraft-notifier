@@ -47,9 +47,6 @@ export interface Config {
     enableWebSearch: boolean;
     apiKey: string;
     notifyChannel: string[];
-    giteeApiToken?: string;
-    giteeOwner?: string;
-    giteeRepo?: string;
     gitcodeApiToken?: string;
     gitcodeOwner?: string;
     gitcodeRepo?: string;
@@ -64,12 +61,6 @@ export const Config: Schema<Config> = Schema.object({
     enableWebSearch: Schema.boolean().default(true).description('是否启用网络搜索功能'),
     apiKey: Schema.string().role('secret').default('').description('AI 接口的 API 密钥').required(),
     notifyChannel: Schema.array(String).default([]).description('用于接收更新通知的频道 ID 列表'),
-    giteeApiToken: Schema.string()
-        .role('secret')
-        .default('')
-        .description('Gitee API 访问令牌，用于上传 XAML 文件'),
-    giteeOwner: Schema.string().default('').description('Gitee 仓库所有者用户名'),
-    giteeRepo: Schema.string().default('').description('Gitee 仓库名称'),
     gitcodeApiToken: Schema.string()
         .role('secret')
         .default('')
