@@ -42,8 +42,19 @@ npm install koishi-plugin-minecraft-notifier
 |-------------------|----------|------------|-----------------------|
 | `notifyChannels`  | string[] | `[]`       | 接收版本更新通知的频道列表         |
 | `checkInterval`   | number   | `3600000`  | 版本检查间隔（毫秒），默认1小时      |
-| `aiApiKey`        | string   | `''`       | AI 模型 API 密钥          |
-| `aiModel`         | string   | `'gpt-5'`  | 使用的 AI 模型             |
+| `apiKey`          | string   | `''`       | AI 模型 API 密钥（必填）      |
+| `aiProvider`      | string   | `'openai'` | 提供商类型：`openai` 或 `openai-compatible` |
+| `baseApiUrl`      | string   | `https://api.openai.com/v1` | OpenAI 兼容接口基础地址 |
+| `providerName`    | string   | `''`       | 兼容提供商标识（可选）        |
+| `organization`    | string   | `''`       | OpenAI Organization（可选） |
+| `project`         | string   | `''`       | OpenAI Project（可选）      |
+| `model`           | string   | `'gpt-5'`  | 默认模型（当 `models` 为空时使用） |
+| `models`          | string[] | `[]`       | 候选模型列表，按顺序自动回退    |
+| `temperature`     | number   | `0.8`      | 采样温度（0-2）            |
+| `maxOutputTokens` | number   | `4096`     | 单次输出最大 token          |
+| `timeoutMs`       | number   | `45000`    | AI 请求超时时间（毫秒）      |
+| `maxRetries`      | number   | `2`        | AI SDK 层重试次数           |
+| `enableWebSearch` | boolean  | `true`     | 启用 OpenAI Web Search 工具 |
 | `enableSnapshot`  | boolean  | `true`     | 是否检测快照版本              |
 | `enableXaml`      | boolean  | `true`     | 是否生成 XAML 文件          |
 | `xamlOutputPath`  | string   | `'./xaml'` | XAML 文件输出路径           |

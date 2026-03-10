@@ -1,4 +1,5 @@
 import '@pynickle/koishi-plugin-adapter-onebot';
+import { summarizeWithAi } from './ai-client';
 import { generateArticleUrl } from './helper/article-helper';
 import { createBotTextMsgNode } from './helper/onebot-helper';
 import { getRandomUserAgent } from './helper/web-helper';
@@ -6,7 +7,7 @@ import { Config } from './index';
 import { getSustemPrompt } from './prompt-const';
 import { exportXaml } from './xaml-generator';
 import { format } from 'autocorrect-node';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Context } from 'koishi';
 import TurndownService from 'turndown';
@@ -134,119 +135,17 @@ async function summarizeMinecraftUpdate(
   version: string,
   updateContent: string
 ): Promise<boolean> {
-  const url = cfg.baseApiUrl.endsWith('/')
-    ? `${cfg.baseApiUrl}chat/completions`
-    : `${cfg.baseApiUrl}/chat/completions`;
-
   const userPrompt = `
 Input:
 - Update log content in Markdown format: 
 ${updateContent}
 `;
-
-  let response: AxiosResponse;
-
-  const requestData = {
-    model: cfg.model,
-    temperature: 0.8,
-    messages: [
-      {
-        role: 'system',
-        content: await getSustemPrompt(ctx, cfg, updateContent.toLowerCase()),
-      },
-      {
-        role: 'user',
-        content: userPrompt,
-      },
-    ],
-    response_format: {
-      type: 'json_schema',
-      json_schema: {
-        name: 'minecraft_update_summary',
-        strict: true,
-        schema: {
-          type: 'object',
-          properties: {
-            new_features: {
-              $ref: '#/definitions/categoryGroup',
-            },
-            improvements: {
-              $ref: '#/definitions/categoryGroup',
-            },
-            balancing: {
-              $ref: '#/definitions/categoryGroup',
-            },
-            bug_fixes: {
-              $ref: '#/definitions/categoryGroup',
-            },
-            technical_changes: {
-              $ref: '#/definitions/categoryGroup',
-            },
-          },
-          required: ['new_features', 'improvements', 'balancing', 'bug_fixes', 'technical_changes'],
-          additionalProperties: false,
-          definitions: {
-            categoryGroup: {
-              type: 'object',
-              properties: {
-                general: {
-                  type: 'array',
-                  description: '属于该大类但未细分的小项',
-                  items: { type: 'string' },
-                },
-                subcategories: {
-                  type: 'array',
-                  description: '该大类下的细分类（带 emoji）',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      subcategory: {
-                        type: 'string',
-                      },
-                      emoji: {
-                        type: 'string',
-                        description: '小类前的 emoji 图标',
-                      },
-                      items: {
-                        type: 'array',
-                        items: {
-                          type: 'string',
-                        },
-                      },
-                    },
-                    required: ['subcategory', 'emoji', 'items'],
-                    additionalProperties: false,
-                  },
-                },
-              },
-              required: ['general', 'subcategories'],
-              additionalProperties: false,
-            },
-          },
-        },
-      },
-    },
-  };
-
-  if (cfg.enableWebSearch) {
-    requestData['web_search'] = true;
-    requestData['tools'] = [{ type: 'web_search_preview' }];
-  }
-
-  try {
-    response = await axios.post(url, requestData, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${cfg.apiKey}`,
-      },
-    });
-  } catch (e) {
-    ctx.logger('minecraft-notifier').error('Summarization API error:', e.response?.data);
+  const systemPrompt = await getSustemPrompt(ctx, cfg, updateContent.toLowerCase());
+  const summary = await summarizeWithAi(ctx, cfg, systemPrompt, userPrompt);
+  if (!summary) {
+    ctx.logger('minecraft-notifier').error('Summarization API error: all configured models failed');
     return false;
   }
-
-  const content = response.data.choices[0].message.content;
-  const summary = JSON.parse(content);
 
   ctx
     .logger('minecraft-notifier')

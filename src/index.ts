@@ -43,7 +43,16 @@ declare module 'koishi' {
 export interface Config {
   checkInterval: number;
   baseApiUrl: string;
+  aiProvider: 'openai' | 'openai-compatible';
+  providerName: string;
+  organization: string;
+  project: string;
   model: string;
+  models: string[];
+  temperature: number;
+  maxOutputTokens: number;
+  timeoutMs: number;
+  maxRetries: number;
   enableWebSearch: boolean;
   apiKey: string;
   notifyChannel: string[];
@@ -54,8 +63,23 @@ export interface Config {
 
 export const Config: Schema<Config> = Schema.object({
   checkInterval: Schema.number().default(3).description('在线状态检查间隔（分钟）'),
+  aiProvider: Schema.union(['openai', 'openai-compatible'])
+    .default('openai')
+    .description('AI 提供商类型：OpenAI 官方或 OpenAI 兼容接口'),
   baseApiUrl: Schema.string().default('https://api.openai.com/v1').description('AI 接口的基础 URL'),
+  providerName: Schema.string()
+    .default('')
+    .description('OpenAI 兼容提供商名称（可选，用于日志/标识）'),
+  organization: Schema.string().default('').description('OpenAI Organization（可选）'),
+  project: Schema.string().default('').description('OpenAI Project（可选）'),
   model: Schema.string().default('gpt-5').description('使用的 AI 模型'),
+  models: Schema.array(String)
+    .default([])
+    .description('候选模型列表（按顺序回退；为空时使用单一 model）'),
+  temperature: Schema.number().min(0).max(2).default(0.8).description('AI 生成温度'),
+  maxOutputTokens: Schema.number().min(1).default(4096).description('单次输出最大 token 数'),
+  timeoutMs: Schema.number().min(1000).default(45000).description('AI 请求超时时间（毫秒）'),
+  maxRetries: Schema.number().min(0).default(2).description('AI 请求失败时最大重试次数'),
   enableWebSearch: Schema.boolean().default(true).description('是否启用网络搜索功能'),
   apiKey: Schema.string().role('secret').default('').description('AI 接口的 API 密钥').required(),
   notifyChannel: Schema.array(String).default([]).description('用于接收更新通知的频道 ID 列表'),

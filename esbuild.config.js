@@ -9,6 +9,9 @@ await build({
     external: [
         'koishi',
         '@pynickle/koishi-plugin-adapter-onebot',
+        'ai',
+        '@ai-sdk/openai',
+        'zod',
         "axios",
         "cheerio",
         "turndown",
