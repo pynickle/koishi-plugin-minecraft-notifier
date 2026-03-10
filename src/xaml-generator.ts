@@ -8,88 +8,85 @@ import { promises } from 'node:fs';
 import path from 'node:path';
 
 interface Subcategory {
-    subcategory: string;
-    emoji: string;
-    items: string[];
+  subcategory: string;
+  emoji: string;
+  items: string[];
 }
 
 interface CategoryGroup {
-    general: string[];
-    subcategories: Subcategory[];
+  general: string[];
+  subcategories: Subcategory[];
 }
 
 interface MinecraftSummary {
-    new_features: CategoryGroup;
-    improvements: CategoryGroup;
-    balancing: CategoryGroup;
-    bug_fixes: CategoryGroup;
-    technical_changes: CategoryGroup;
+  new_features: CategoryGroup;
+  improvements: CategoryGroup;
+  balancing: CategoryGroup;
+  bug_fixes: CategoryGroup;
+  technical_changes: CategoryGroup;
 }
 
 // 函数：生成 XAML 字符串
 function generateXaml(summary: MinecraftSummary, version: string): string {
-    const orderedCategories: (keyof MinecraftSummary)[] = [
-        'new_features',
-        'improvements',
-        'balancing',
-        'bug_fixes',
-        'technical_changes',
-    ];
+  const orderedCategories: (keyof MinecraftSummary)[] = [
+    'new_features',
+    'improvements',
+    'balancing',
+    'bug_fixes',
+    'technical_changes',
+  ];
 
-    // 构建类别卡片部分
-    let categoriesXaml = '';
-    for (const category of orderedCategories) {
-        const catData = summary[category];
-        const general = catData.general || [];
-        const subcategories = catData.subcategories || [];
-        if (general.length === 0 && subcategories.length === 0) continue; // 跳过空类别
+  // 构建类别卡片部分
+  let categoriesXaml = '';
+  for (const category of orderedCategories) {
+    const catData = summary[category];
+    const general = catData.general || [];
+    const subcategories = catData.subcategories || [];
+    if (general.length === 0 && subcategories.length === 0) continue; // 跳过空类别
 
-        const categoryTitle = minecraftSummaryTypeMap[category];
+    const categoryTitle = minecraftSummaryTypeMap[category];
 
-        let contentXaml = '';
+    let contentXaml = '';
 
-        // General 项
-        for (let i = 0; i < general.length; i++) {
-            const msg = general[i];
-            const margin =
-                i === general.length - 1 && subcategories.length > 0 ? '0,0,0,10' : '0,0,0,2';
-            contentXaml += `
+    // General 项
+    for (let i = 0; i < general.length; i++) {
+      const msg = general[i];
+      const margin = i === general.length - 1 && subcategories.length > 0 ? '0,0,0,10' : '0,0,0,2';
+      contentXaml += `
                     <TextBlock
                         Margin="${margin}"
                         Foreground="{DynamicResource ColorBrush1}"
                         Text="- ${escapeForXaml(format(msg))}" />`;
-        }
+    }
 
-        // 子类别
-        for (let j = 0; j < subcategories.length; j++) {
-            const sub = subcategories[j];
-            contentXaml += `
+    // 子类别
+    for (let j = 0; j < subcategories.length; j++) {
+      const sub = subcategories[j];
+      contentXaml += `
                     <TextBlock
                         Margin="0,0,0,4"
                         FontSize="14"
                         Foreground="{DynamicResource ColorBrush3}"
                         Text="${sub.emoji} ${escapeForXaml(format(sub.subcategory))}" />`;
-            for (let k = 0; k < sub.items.length; k++) {
-                const msg = sub.items[k];
-                const margin =
-                    k === sub.items.length - 1 && j === subcategories.length - 1
-                        ? ''
-                        : 'Margin="0,0,0,2"';
-                contentXaml += `
+      for (let k = 0; k < sub.items.length; k++) {
+        const msg = sub.items[k];
+        const margin =
+          k === sub.items.length - 1 && j === subcategories.length - 1 ? '' : 'Margin="0,0,0,2"';
+        contentXaml += `
                     <TextBlock
                         ${margin}
                         Foreground="{DynamicResource ColorBrush1}"
                         Text="  - ${escapeForXaml(format(msg))}" />`;
-            }
-            if (j < subcategories.length - 1) {
-                contentXaml += `
+      }
+      if (j < subcategories.length - 1) {
+        contentXaml += `
                     <!-- Spacer for subcategories -->
                     <TextBlock Margin="0,0,0,10" />`;
-            }
-        }
+      }
+    }
 
-        // 包装成 MyCard
-        categoriesXaml += `
+    // 包装成 MyCard
+    categoriesXaml += `
             <!--  ${categoryTitle}卡片  -->
             <local:MyCard
                 Title="${escapeForXaml(format(categoryTitle))}"
@@ -101,10 +98,10 @@ function generateXaml(summary: MinecraftSummary, version: string): string {
 ${contentXaml}
                 </StackPanel>
             </local:MyCard>`;
-    }
+  }
 
-    // 完整 XAML 模板
-    return `<StackPanel
+  // 完整 XAML 模板
+  return `<StackPanel
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL2;assembly=PCL2"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
@@ -168,49 +165,49 @@ ${categoriesXaml}
 }
 
 export async function exportXaml(
-    ctx: Context,
-    cfg: Config,
-    summary: MinecraftSummary,
-    version: string
+  ctx: Context,
+  cfg: Config,
+  summary: MinecraftSummary,
+  version: string
 ): Promise<string> {
-    const xaml = generateXaml(summary, version);
-    const xamlPath = path.join(ctx.baseDir, 'data', 'minecraft-notifier', 'xaml');
-    const xamlName = `${version}.xaml`;
-    let fullXamlPath = path.join(xamlPath, xamlName);
-    let fullHomePagePath = path.join(xamlPath, 'PCL.HomePage.xaml');
+  const xaml = generateXaml(summary, version);
+  const xamlPath = path.join(ctx.baseDir, 'data', 'minecraft-notifier', 'xaml');
+  const xamlName = `${version}.xaml`;
+  let fullXamlPath = path.join(xamlPath, xamlName);
+  let fullHomePagePath = path.join(xamlPath, 'PCL.HomePage.xaml');
 
-    await promises.writeFile(fullXamlPath, xaml);
-    await promises.copyFile(fullXamlPath, fullHomePagePath);
+  await promises.writeFile(fullXamlPath, xaml);
+  await promises.copyFile(fullXamlPath, fullHomePagePath);
 
-    if (cfg.gitcodeApiToken && cfg.gitcodeOwner && cfg.gitcodeRepo) {
-        await upsertFileToGitCode(
-            ctx,
-            cfg.gitcodeOwner,
-            cfg.gitcodeRepo,
-            'Custom.xaml',
-            xaml,
-            `feat: update PCL HomePage XAML for version ${version}`,
-            cfg.gitcodeApiToken,
-            'master'
-        ).then((result) => {
-            if (result.success) {
-                ctx.logger('minecraft-notifier').info('Upsert successful of gitcode.');
-            } else {
-                ctx.logger('minecraft-notifier').warn('Upsert failed of gitcode:', result.error);
-            }
-        });
+  if (cfg.gitcodeApiToken && cfg.gitcodeOwner && cfg.gitcodeRepo) {
+    await upsertFileToGitCode(
+      ctx,
+      cfg.gitcodeOwner,
+      cfg.gitcodeRepo,
+      'Custom.xaml',
+      xaml,
+      `feat: update PCL HomePage XAML for version ${version}`,
+      cfg.gitcodeApiToken,
+      'master'
+    ).then((result) => {
+      if (result.success) {
+        ctx.logger('minecraft-notifier').info('Upsert successful of gitcode.');
+      } else {
+        ctx.logger('minecraft-notifier').warn('Upsert failed of gitcode:', result.error);
+      }
+    });
 
-        await upsertFileToGitCode(
-            ctx,
-            cfg.gitcodeOwner,
-            cfg.gitcodeRepo,
-            'Custom.xaml.ini',
-            version,
-            `feat: update PCL HomePage XAML INI for version ${version}`,
-            cfg.gitcodeApiToken,
-            'master'
-        );
-    }
+    await upsertFileToGitCode(
+      ctx,
+      cfg.gitcodeOwner,
+      cfg.gitcodeRepo,
+      'Custom.xaml.ini',
+      version,
+      `feat: update PCL HomePage XAML INI for version ${version}`,
+      cfg.gitcodeApiToken,
+      'master'
+    );
+  }
 
-    return fullXamlPath;
+  return fullXamlPath;
 }
