@@ -1,3 +1,9 @@
+## [1.12.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.12.1...v1.12.2) (2026-03-10)
+
+### ♻️ Code Refactoring
+
+* refactor code ([09235a5](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/09235a531fd7b93af76fb19d6bd79b614fe81df4))
+
 ## [1.12.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.12.0...v1.12.1) (2026-03-10)
 
 ### 🐛 Bug Fixes
