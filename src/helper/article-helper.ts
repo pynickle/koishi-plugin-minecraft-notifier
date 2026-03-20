@@ -11,6 +11,9 @@
   if (normalizedVersion.includes('-pre-')) {
     return `${baseUrl}/minecraft-${urlVersion.replace('pre', 'pre-release')}`;
   }
+  if (normalizedVersion.includes('-rc-')) {
+    return `${baseUrl}/minecraft-${urlVersion.replace('rc', 'release-candidate')}`;
+  }
 
   return `${baseUrl}/minecraft-java-edition-${urlVersion}`;
 }

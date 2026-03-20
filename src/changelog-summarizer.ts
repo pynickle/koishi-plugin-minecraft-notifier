@@ -114,19 +114,50 @@ export async function processNewVersionArticle(
   cfg: Config,
   version: string,
   isSnapshot: boolean
-) {
+): Promise<boolean> {
   ctx
     .logger('minecraft-notifier')
     .info(`Processing new ${isSnapshot ? 'snapshot' : 'release'} version: ${version}`);
   const content = await fetchArticleContent(ctx, version);
   if (!content) {
     ctx.logger('minecraft-notifier').warn(`No content found for version ${version}`);
-    return;
+    return false;
   }
   ctx
     .logger('minecraft-notifier')
     .info(`Fetched content for version ${version}, starting summarization...`);
   return await summarizeMinecraftUpdate(ctx, cfg, version, content);
+}
+
+function detectSnapshotVersion(version: string): boolean {
+  const normalizedVersion = version.trim().toLowerCase().replace(/\s+/g, '-');
+  return (
+    normalizedVersion.includes('-snapshot-') ||
+    normalizedVersion.includes('-pre-') ||
+    normalizedVersion.includes('-pre-release-') ||
+    normalizedVersion.includes('-rc-') ||
+    normalizedVersion.includes('-release-candidate-') ||
+    /\d{2}w\d{2}[a-z]/.test(normalizedVersion)
+  );
+}
+
+export async function forceRefreshVersionArticle(
+  ctx: Context,
+  cfg: Config,
+  version: string
+): Promise<boolean> {
+  const normalizedVersion = version.trim();
+  if (!normalizedVersion) {
+    ctx.logger('minecraft-notifier').warn('Skip force refresh because version is empty.');
+    return false;
+  }
+
+  return await processNewVersionArticle(
+    ctx,
+    cfg,
+    normalizedVersion,
+    detectSnapshotVersion(normalizedVersion)
+  );
 }
 
 async function summarizeMinecraftUpdate(

@@ -1,4 +1,5 @@
 import { generateArticleUrl } from './helper/article-helper';
+import { forceRefreshVersionArticle } from './changelog-summarizer';
 import { checkMinecraftVersion } from './version-checker';
 import fs from 'fs';
 import { Context, Schema } from 'koishi';
@@ -162,6 +163,23 @@ export function apply(ctx: Context, cfg: Config) {
       authority: 4,
     })
     .action(async () => await checkMinecraftVersion(ctx, cfg));
+
+  ctx
+    .command('mc.article.trigger <version:text>', '强制触发指定版本文章总结更新（不写入数据库）', {
+      authority: 4,
+    })
+    .action(async (_, version) => {
+      if (!version?.trim()) {
+        return '❌ 请提供要更新的版本号，例如：mc.article.trigger 1.21.5';
+      }
+
+      const success = await forceRefreshVersionArticle(ctx, cfg, version);
+      if (success) {
+        return `✅ 已强制更新 ${version.trim()} 的文章总结（未写入数据库）。`;
+      }
+
+      return `❌ 强制更新 ${version.trim()} 的文章总结失败，请检查日志。`;
+    });
 
   ctx.setInterval(async () => await checkMinecraftVersion(ctx, cfg), 60000 * cfg.checkInterval);
 
