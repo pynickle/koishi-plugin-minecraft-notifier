@@ -1,3 +1,9 @@
+## [1.13.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.12.2...v1.13.0) (2026-03-20)
+
+### ✨ Features
+
+* add manual trigger for article ([d17b6e5](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/d17b6e52d2b4a94de86d92654e53ab0868ffe452))
+
 ## [1.12.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.12.1...v1.12.2) (2026-03-10)
 
 ### ♻️ Code Refactoring
