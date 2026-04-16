@@ -1,7 +1,8 @@
-import { Config } from './index';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Context } from 'koishi';
+
+import { Config } from './index';
 
 /**
  * 翻译对类型

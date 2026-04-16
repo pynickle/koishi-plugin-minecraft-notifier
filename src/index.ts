@@ -1,10 +1,12 @@
-import { generateArticleUrl } from './helper/article-helper';
-import { forceRefreshVersionArticle } from './changelog-summarizer';
-import { checkMinecraftVersion } from './version-checker';
 import fs from 'fs';
-import { Context, Schema } from 'koishi';
 import { promises } from 'node:fs';
 import path from 'node:path';
+
+import { Context, Schema } from 'koishi';
+
+import { forceRefreshVersionArticle } from './changelog-summarizer';
+import { generateArticleUrl } from './helper/article-helper';
+import { checkMinecraftVersion } from './version-checker';
 
 export const name = 'minecraft-notifier';
 

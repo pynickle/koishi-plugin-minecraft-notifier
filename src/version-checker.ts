@@ -1,7 +1,8 @@
-import { checkNewVersionArticle } from './changelog-summarizer';
-import { Config } from './index';
 import axios from 'axios';
 import { Context } from 'koishi';
+
+import { checkNewVersionArticle } from './changelog-summarizer';
+import { Config } from './index';
 
 interface VersionData {
   lastRelease: string;

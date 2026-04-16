@@ -1,4 +1,10 @@
 import '@pynickle/koishi-plugin-adapter-onebot';
+import { format } from 'autocorrect-node';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import { Context } from 'koishi';
+import TurndownService from 'turndown';
+
 import { summarizeWithAi } from './ai-client';
 import { generateArticleUrl } from './helper/article-helper';
 import { createBotTextMsgNode } from './helper/onebot-helper';
@@ -6,11 +12,6 @@ import { getRandomUserAgent } from './helper/web-helper';
 import { Config } from './index';
 import { getSustemPrompt } from './prompt-const';
 import { exportXaml } from './xaml-generator';
-import { format } from 'autocorrect-node';
-import axios from 'axios';
-import * as cheerio from 'cheerio';
-import { Context } from 'koishi';
-import TurndownService from 'turndown';
 
 export const minecraftSummaryTypeMap: Record<string, string> = {
   new_features: '✨ 新特性',

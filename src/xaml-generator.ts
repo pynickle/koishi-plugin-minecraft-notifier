@@ -1,11 +1,13 @@
+import { promises } from 'node:fs';
+import path from 'node:path';
+
+import { format } from 'autocorrect-node';
+import { Context } from 'koishi';
+
 import { minecraftSummaryTypeMap } from './changelog-summarizer';
 import { upsertFileToGitCode } from './helper/git-platform-helper';
 import { escapeForXaml } from './helper/xaml-helper';
 import { Config } from './index';
-import { format } from 'autocorrect-node';
-import { Context } from 'koishi';
-import { promises } from 'node:fs';
-import path from 'node:path';
 
 interface Subcategory {
   subcategory: string;

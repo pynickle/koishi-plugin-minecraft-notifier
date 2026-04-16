@@ -1,8 +1,9 @@
 import { createOpenAI, openai } from '@ai-sdk/openai';
 import { APICallError, generateObject, generateText } from 'ai';
-import { z } from 'zod';
-import { Config } from './index';
 import { Context } from 'koishi';
+import { z } from 'zod';
+
+import { Config } from './index';
 
 const subcategorySchema = z.object({
   subcategory: z.string(),
