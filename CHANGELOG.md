@@ -1,3 +1,9 @@
+## [1.13.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.13.1...v1.13.2) (2026-04-16)
+
+### 🔧 Miscellaneous Changes
+
+* update deps ([3ee57f5](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/3ee57f550bca6cd3a9dc2b598cf106ae7f44b98a))
+
 ## [1.13.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.13.0...v1.13.1) (2026-04-16)
 
 ### 🔧 Miscellaneous Changes
