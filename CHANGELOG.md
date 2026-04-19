@@ -1,3 +1,9 @@
+## [1.14.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.13.2...v1.14.0) (2026-04-19)
+
+### ✨ Features
+
+* add sheet ([a4d2f75](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/a4d2f75a981e95592dcfc17b38e0b77ab97b51f0))
+
 ## [1.13.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.13.1...v1.13.2) (2026-04-16)
 
 ### 🔧 Miscellaneous Changes
