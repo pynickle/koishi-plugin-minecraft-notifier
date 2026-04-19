@@ -4,6 +4,9 @@ import { Context } from 'koishi';
 
 import { Config } from './index';
 
+const TRANSLATION_SHEET_URL =
+  'https://light-beacon.github.io/Minecraft-ZH-Translation-Sheet/translations.json';
+
 /**
  * 翻译对类型
  */
@@ -177,7 +180,45 @@ async function fetchWikiTranslations(ctx: Context): Promise<TranslationPair[]> {
 }
 
 /**
- * 提取所有翻译（从 Wiki 和 GitCode）
+ * 从 Minecraft 中文翻译表获取翻译
+ * @param ctx - Koishi 上下文
+ * @returns Promise<TranslationPair[]>
+ */
+async function fetchTranslationSheet(ctx: Context): Promise<TranslationPair[]> {
+  try {
+    const response = await axios.get(TRANSLATION_SHEET_URL, {
+      timeout: 10000,
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    const data = response.data;
+    const translations: TranslationPair[] = [];
+
+    if (typeof data === 'object' && data !== null) {
+      for (const [english, chinese] of Object.entries(data)) {
+        if (typeof chinese === 'string') {
+          translations.push({
+            english: english.trim(),
+            chinese: chinese.trim(),
+          });
+        }
+      }
+    }
+
+    ctx
+      .logger('translation-extractor')
+      .info(`Loaded ${translations.length} translations from sheet`);
+    return translations;
+  } catch (error: any) {
+    ctx.logger('translation-extractor').warn('Failed to fetch translation sheet:', error.message);
+    return [];
+  }
+}
+
+/**
+ * 提取所有翻译（从 Wiki、GitCode 和翻译表）
  * @param ctx - Koishi 上下文
  * @param cfg - 配置选项
  * @param searchStr - 搜索字符串
@@ -189,50 +230,48 @@ export async function extractTranslations(
   searchStr: string
 ): Promise<string> {
   try {
-    // 并行获取两个来源的翻译
-    const [wikiTranslations, gitcodeTranslations] = await Promise.all([
-      fetchWikiTranslations(ctx),
-      cfg.gitcodeApiToken && cfg.gitcodeOwner && cfg.gitcodeRepo
-        ? fetchGitCodeTranslations(
-            ctx,
-            cfg.gitcodeOwner,
-            cfg.gitcodeRepo,
-            'Translations.json',
-            cfg.gitcodeApiToken
-          )
-        : Promise.resolve([]),
-    ]);
+    const promises: Promise<TranslationPair[]>[] = [];
 
-    // 合并翻译（GitCode 的翻译优先级更高，可覆盖 Wiki 的翻译）
+    if (cfg.translationSource === 'sheet') {
+      promises.push(fetchTranslationSheet(ctx));
+    } else {
+      promises.push(fetchWikiTranslations(ctx));
+    }
+
+    if (cfg.gitcodeApiToken && cfg.gitcodeOwner && cfg.gitcodeRepo) {
+      promises.push(
+        fetchGitCodeTranslations(
+          ctx,
+          cfg.gitcodeOwner,
+          cfg.gitcodeRepo,
+          'Translations.json',
+          cfg.gitcodeApiToken
+        )
+      );
+    }
+
+    const results = await Promise.all(promises);
+    const allTranslations: TranslationPair[] = results.flat();
+
     const translationMap = new Map<string, string>();
 
-    // 添加 GitCode 翻译
-    for (const { english, chinese } of gitcodeTranslations) {
+    for (const { english, chinese } of allTranslations) {
       translationMap.set(english.toLowerCase(), chinese);
     }
 
-    // 添加 Wiki 翻译
-    for (const { english, chinese } of wikiTranslations) {
-      translationMap.set(english.toLowerCase(), chinese);
-    }
-
-    // 过滤匹配的翻译
     const lowerSearchStr = searchStr.toLowerCase();
     const matches: TranslationPair[] = [];
 
     for (const [englishLower, chinese] of translationMap.entries()) {
       if (lowerSearchStr.includes(englishLower)) {
-        // 找到原始大小写的英文名
         const originalEnglish =
-          [...wikiTranslations, ...gitcodeTranslations].find(
-            (t) => t.english.toLowerCase() === englishLower
-          )?.english || englishLower;
+          allTranslations.find((t) => t.english.toLowerCase() === englishLower)?.english ||
+          englishLower;
 
         matches.push({ english: originalEnglish, chinese });
       }
     }
 
-    // 格式化输出
     return matches.map(({ english, chinese }) => `${english}: ${chinese}`).join('\n');
   } catch (error) {
     ctx.logger('translation-extractor').warn('Failed to extract translations:', error);

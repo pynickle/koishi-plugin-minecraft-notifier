@@ -49,9 +49,6 @@ function createProvider(cfg: Config) {
   return createOpenAI({
     apiKey: cfg.apiKey,
     baseURL: cfg.aiProvider === 'openai' ? undefined : normalizeBaseUrl(cfg.baseApiUrl),
-    name: cfg.providerName?.trim() || undefined,
-    organization: cfg.organization?.trim() || undefined,
-    project: cfg.project?.trim() || undefined,
   });
 }
 
