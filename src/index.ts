@@ -54,9 +54,12 @@ export interface Config {
   timeoutMs: number;
   maxRetries: number;
   enableWebSearch: boolean;
+  continueAiSummaryOnSourceFetchFailure: boolean;
   apiKey: string;
   notifyChannel: string[];
-  translationSource: 'sheet' | 'wiki';
+  translationSource: 'sheet' | 'sheet-github-api' | 'wiki';
+  githubTranslationApiUrl: string;
+  githubTranslationApiToken?: string;
   gitcodeApiToken?: string;
   gitcodeOwner?: string;
   gitcodeRepo?: string;
@@ -77,11 +80,27 @@ export const Config: Schema<Config> = Schema.object({
   timeoutMs: Schema.number().min(1000).default(45000).description('AI 请求超时时间（毫秒）'),
   maxRetries: Schema.number().min(0).default(2).description('AI 请求失败时最大重试次数'),
   enableWebSearch: Schema.boolean().default(true).description('是否启用网络搜索功能'),
+  continueAiSummaryOnSourceFetchFailure: Schema.boolean()
+    .default(true)
+    .description('更新日志抓取失败时，是否继续执行 AI 总结；关闭后将直接判定失败'),
   apiKey: Schema.string().role('secret').default('').description('AI 接口的 API 密钥').required(),
   notifyChannel: Schema.array(String).default([]).description('用于接收更新通知的频道 ID 列表'),
-  translationSource: Schema.union(['sheet', 'wiki'])
+  translationSource: Schema.union(['sheet', 'sheet-github-api', 'wiki'])
     .default('sheet')
-    .description('翻译数据来源：sheet（翻译表）或 wiki（Wiki）'),
+    .description(
+      '翻译数据来源：sheet（公开翻译表）、sheet-github-api（GitHub Contents API）或 wiki（Wiki）'
+    ),
+  githubTranslationApiUrl: Schema.string()
+    .default(
+      'https://api.github.com/repos/Light-Beacon/Minecraft-ZH-Translation-Sheet/contents/data/translations.json'
+    )
+    .description('翻译表 GitHub Contents API 地址；当 translationSource=sheet-github-api 时使用'),
+  githubTranslationApiToken: Schema.string()
+    .role('secret')
+    .default('')
+    .description(
+      '请求 GitHub Contents API 的 PAT Token；当 translationSource=sheet-github-api 时建议填写'
+    ),
   gitcodeApiToken: Schema.string()
     .role('secret')
     .default('')

@@ -7,12 +7,20 @@ import { Config } from './index';
 const TRANSLATION_SHEET_URL =
   'https://light-beacon.github.io/Minecraft-ZH-Translation-Sheet/translations.json';
 
+const DEFAULT_GITHUB_API_VERSION = '2022-11-28';
+
 /**
  * 翻译对类型
  */
 interface TranslationPair {
   english: string;
   chinese: string;
+}
+
+interface GitHubContentsFileResponse {
+  type?: string;
+  encoding?: string;
+  content?: string;
 }
 
 /**
@@ -218,6 +226,66 @@ async function fetchTranslationSheet(ctx: Context): Promise<TranslationPair[]> {
 }
 
 /**
+ * 从 GitHub Contents API 获取翻译表
+ * @param ctx - Koishi 上下文
+ * @param url - GitHub Contents API 地址
+ * @param token - GitHub PAT Token
+ * @returns Promise<TranslationPair[]>
+ */
+async function fetchGitHubTranslationSheet(
+  ctx: Context,
+  url: string,
+  token?: string
+): Promise<TranslationPair[]> {
+  if (!url.trim()) {
+    ctx.logger('translation-extractor').warn('GitHub translation API URL is empty');
+    return [];
+  }
+
+  if (!token?.trim()) {
+    ctx
+      .logger('translation-extractor')
+      .warn('GitHub translation API token is empty; skip fetching from GitHub Contents API');
+    return [];
+  }
+
+  try {
+    const response = await axios.get<GitHubContentsFileResponse>(url, {
+      timeout: 10000,
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${token.trim()}`,
+        'X-GitHub-Api-Version': DEFAULT_GITHUB_API_VERSION,
+      },
+    });
+
+    const data = response.data;
+    if (data?.type !== 'file' || !data.content) {
+      ctx
+        .logger('translation-extractor')
+        .warn('GitHub contents response does not contain file content');
+      return [];
+    }
+
+    const decodedContent = Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString('utf-8');
+    const translations = parseTranslationContent(decodedContent);
+
+    ctx
+      .logger('translation-extractor')
+      .info(`Loaded ${translations.length} translations from GitHub contents API`);
+    return translations;
+  } catch (error: any) {
+    ctx
+      .logger('translation-extractor')
+      .warn(
+        'Failed to fetch translation sheet from GitHub contents API:',
+        error.response?.data || error.message
+      );
+    return [];
+  }
+}
+
+/**
  * 提取所有翻译（从 Wiki、GitCode 和翻译表）
  * @param ctx - Koishi 上下文
  * @param cfg - 配置选项
@@ -234,6 +302,10 @@ export async function extractTranslations(
 
     if (cfg.translationSource === 'sheet') {
       promises.push(fetchTranslationSheet(ctx));
+    } else if (cfg.translationSource === 'sheet-github-api') {
+      promises.push(
+        fetchGitHubTranslationSheet(ctx, cfg.githubTranslationApiUrl, cfg.githubTranslationApiToken)
+      );
     } else {
       promises.push(fetchWikiTranslations(ctx));
     }

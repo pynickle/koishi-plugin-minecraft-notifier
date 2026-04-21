@@ -122,7 +122,17 @@ export async function processNewVersionArticle(
   const content = await fetchArticleContent(ctx, version);
   if (!content) {
     ctx.logger('minecraft-notifier').warn(`No content found for version ${version}`);
-    return false;
+
+    if (!cfg.continueAiSummaryOnSourceFetchFailure) {
+      ctx
+        .logger('minecraft-notifier')
+        .warn(`Stop AI summarization for version ${version} because source fetch failed.`);
+      return false;
+    }
+
+    ctx
+      .logger('minecraft-notifier')
+      .warn(`Continue AI summarization for version ${version} without source content.`);
   }
   ctx
     .logger('minecraft-notifier')
@@ -167,10 +177,18 @@ async function summarizeMinecraftUpdate(
   version: string,
   updateContent: string
 ): Promise<boolean> {
-  const userPrompt = `
+  const hasSourceContent = Boolean(updateContent?.trim());
+  const userPrompt = hasSourceContent
+    ? `
 Input:
 - Update log content in Markdown format: 
 ${updateContent}
+`
+    : `
+Input:
+- Update log content in Markdown format: unavailable
+- Source fetch status: failed
+- Instruction: Do not fabricate changes. If the available information is insufficient, return the empty JSON structure required by the system prompt.
 `;
   const systemPrompt = await getSustemPrompt(ctx, cfg, updateContent.toLowerCase());
   const summary = await summarizeWithAi(ctx, cfg, systemPrompt, userPrompt);
