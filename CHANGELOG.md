@@ -1,3 +1,9 @@
+## [1.15.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.14.0...v1.15.0) (2026-04-21)
+
+### ✨ Features
+
+* translation fetch ([cce6b2b](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/cce6b2b11916cd85024aca82209f61d5712d0877))
+
 ## [1.14.0](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.13.2...v1.14.0) (2026-04-19)
 
 ### ✨ Features
