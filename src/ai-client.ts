@@ -5,11 +5,24 @@ import { z } from 'zod';
 
 import { Config } from './index';
 
-const subcategorySchema = z.object({
-  subcategory: z.string(),
-  emoji: z.string(),
-  items: z.array(z.string()),
-});
+const subcategorySchema = z
+  .object({
+    subcategory: z.string(),
+    emoji: z.string(),
+    items: z.array(z.string()),
+  })
+  .or(
+    z.object({
+      name: z.string(),
+      emoji: z.string(),
+      items: z.array(z.string()),
+    })
+  )
+  .transform((data) => ({
+    subcategory: 'subcategory' in data ? data.subcategory : data.name,
+    emoji: data.emoji,
+    items: data.items,
+  }));
 
 const categoryGroupSchema = z.object({
   general: z.array(z.string()),
@@ -115,11 +128,6 @@ export async function summarizeWithAi(
         output: Output.object({
           schema: minecraftSummarySchema,
         }),
-        providerOptions: {
-          openai: {
-            strictJsonSchema: true,
-          },
-        },
       });
 
       ctx.logger('minecraft-notifier').info(`AI summarization succeeded with model ${modelId}`);
