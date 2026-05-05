@@ -1,5 +1,5 @@
 import { createOpenAI, openai } from '@ai-sdk/openai';
-import { APICallError, generateObject, generateText } from 'ai';
+import { APICallError, generateText, Output } from 'ai';
 import { Context } from 'koishi';
 import { z } from 'zod';
 
@@ -101,54 +101,25 @@ export async function summarizeWithAi(
     };
 
     try {
-      const objectResult = await generateObject({
+      // 构建工具配置（如果启用网络搜索且工具可用）
+      const tools =
+        cfg.enableWebSearch && modelFactory.webSearchTool
+          ? {
+              web_search: modelFactory.webSearchTool,
+            }
+          : undefined;
+
+      const result = await generateText({
         ...commonOptions,
-        schema: minecraftSummarySchema,
+        tools,
+        output: Output.object({
+          schema: minecraftSummarySchema,
+        }),
       });
 
       ctx.logger('minecraft-notifier').info(`AI summarization succeeded with model ${modelId}`);
-      return objectResult.object;
+      return result.output;
     } catch (error) {
-      if (cfg.enableWebSearch && modelFactory.webSearchTool) {
-        try {
-          const fallbackResult = await generateText({
-            ...commonOptions,
-            tools: {
-              web_search: modelFactory.webSearchTool,
-            },
-          });
-
-          const parsed = JSON.parse(fallbackResult.text);
-          const validated = minecraftSummarySchema.safeParse(parsed);
-          if (!validated.success) {
-            ctx
-              .logger('minecraft-notifier')
-              .warn(`AI summarization result schema validation failed with model ${modelId}`);
-            continue;
-          }
-
-          ctx
-            .logger('minecraft-notifier')
-            .info(`AI summarization succeeded with model ${modelId} via web search fallback`);
-          return validated.data;
-        } catch (fallbackError) {
-          if (APICallError.isInstance(fallbackError)) {
-            ctx
-              .logger('minecraft-notifier')
-              .warn(
-                `AI summarization web-search fallback failed with model ${modelId}: status=${fallbackError.statusCode}, message=${fallbackError.message}`
-              );
-          } else {
-            ctx
-              .logger('minecraft-notifier')
-              .warn(
-                `AI summarization web-search fallback failed with model ${modelId}:`,
-                fallbackError
-              );
-          }
-        }
-      }
-
       if (APICallError.isInstance(error)) {
         ctx
           .logger('minecraft-notifier')
