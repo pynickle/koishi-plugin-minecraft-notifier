@@ -1,3 +1,9 @@
+## [1.15.2](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.15.1...v1.15.2) (2026-05-05)
+
+### 🐛 Bug Fixes
+
+* strict ([dade2c6](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/dade2c666b83cdd74829bc4764b7f2601b7e4454))
+
 ## [1.15.1](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.15.0...v1.15.1) (2026-05-05)
 
 ### 🐛 Bug Fixes
