@@ -43,8 +43,8 @@ npm install koishi-plugin-minecraft-notifier
 | `notifyChannels`  | string[] | `[]`       | 接收版本更新通知的频道列表         |
 | `checkInterval`   | number   | `3600000`  | 版本检查间隔（毫秒），默认1小时      |
 | `apiKey`          | string   | `''`       | AI 模型 API 密钥（必填）      |
-| `aiProvider`      | string   | `'openai'` | 提供商类型：`openai` 或 `openai-compatible` |
-| `baseApiUrl`      | string   | `https://api.openai.com/v1` | OpenAI 兼容接口基础地址 |
+| `aiProvider`      | string   | `'openai'` | 提供商类型：`openai` (OpenAI Responses) 或 `openai-compatible` (Chat Completions) |
+| `baseApiUrl`      | string   | `https://api.openai.com/v1` | AI 接口基础地址 |
 | `providerName`    | string   | `''`       | 兼容提供商标识（可选）        |
 | `organization`    | string   | `''`       | OpenAI Organization（可选） |
 | `project`         | string   | `''`       | OpenAI Project（可选）      |

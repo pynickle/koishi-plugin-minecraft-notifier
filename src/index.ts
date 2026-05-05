@@ -69,7 +69,7 @@ export const Config: Schema<Config> = Schema.object({
   checkInterval: Schema.number().default(3).description('在线状态检查间隔（分钟）'),
   aiProvider: Schema.union(['openai', 'openai-compatible'])
     .default('openai')
-    .description('AI 提供商类型：OpenAI 官方或 OpenAI 兼容接口'),
+    .description('AI 提供商类型：OpenAI Responses 或 Chat Completions'),
   baseApiUrl: Schema.string().default('https://api.openai.com/v1').description('AI 接口的基础 URL'),
   model: Schema.string().default('gpt-5').description('使用的 AI 模型'),
   models: Schema.array(String)

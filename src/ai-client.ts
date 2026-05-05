@@ -48,7 +48,7 @@ function getCandidateModels(cfg: Config): string[] {
 function createProvider(cfg: Config) {
   return createOpenAI({
     apiKey: cfg.apiKey,
-    baseURL: cfg.aiProvider === 'openai' ? undefined : normalizeBaseUrl(cfg.baseApiUrl),
+    baseURL: normalizeBaseUrl(cfg.baseApiUrl),
   });
 }
 
