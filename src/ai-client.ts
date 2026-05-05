@@ -115,6 +115,11 @@ export async function summarizeWithAi(
         output: Output.object({
           schema: minecraftSummarySchema,
         }),
+        providerOptions: {
+          openai: {
+            strictJsonSchema: true,
+          },
+        },
       });
 
       ctx.logger('minecraft-notifier').info(`AI summarization succeeded with model ${modelId}`);
