@@ -1,3 +1,9 @@
+## [1.15.4](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.15.3...v1.15.4) (2026-05-05)
+
+### 🚀 Improvements
+
+* go ([e8c383f](https://github.com/pynickle/koishi-plugin-minecraft-notifier/commit/e8c383f6e75607ce1be66d7c9ef9f982b43297be))
+
 ## [1.15.3](https://github.com/pynickle/koishi-plugin-minecraft-notifier/compare/v1.15.2...v1.15.3) (2026-05-05)
 
 ### 🐛 Bug Fixes
